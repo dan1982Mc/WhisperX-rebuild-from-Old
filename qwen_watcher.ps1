@@ -25,6 +25,22 @@ while ($true) {
 
         try {
 
+            # Ignore the helper file created for participant mapping.
+            if ($file.Name -eq "participants_for_qwen.md") {
+                $processed[$file.FullName] = $true
+                continue
+            }
+
+            $outputFile = Join-Path $MeetingNotesRoot ($file.BaseName -replace "_for_qwen$","_meeting_notes.txt")
+            $evidenceFile = Join-Path $file.DirectoryName ($file.BaseName -replace "_for_qwen$","_evidence.json")
+
+            # Completed meetings must not be processed again after watcher restart.
+            if (Test-Path $outputFile) {
+                Write-Host "Already completed: $($file.Name)" -ForegroundColor DarkGray
+                $processed[$file.FullName] = $true
+                continue
+            }
+
             # -------------------------------------------------
             # Find participant file
             # -------------------------------------------------
@@ -82,7 +98,15 @@ while ($true) {
                 continue
             }
 
-            Write-Host "Sending to Qwen: $($file.Name)"
+            $ExtractionPromptFile = Join-Path $PSScriptRoot "Qwen\extraction_prompt.txt"
+            $NotesPromptFile = Join-Path $PSScriptRoot "Qwen\meeting_notes_prompt.txt"
+
+            if (-not (Test-Path $ExtractionPromptFile)) {
+                throw "Missing prompt file: $ExtractionPromptFile"
+            }
+            if (-not (Test-Path $NotesPromptFile)) {
+                throw "Missing prompt file: $NotesPromptFile"
+            }
 
             $transcript = Get-Content `
                 $file.FullName `
@@ -103,17 +127,6 @@ while ($true) {
             # -------------------------------------------------
             # Stage 1: extract structured evidence
             # -------------------------------------------------
-
-            $ExtractionPromptFile = Join-Path $PSScriptRoot "Qwen\extraction_prompt.txt"
-            $NotesPromptFile = Join-Path $PSScriptRoot "Qwen\meeting_notes_prompt.txt"
-
-            if (-not (Test-Path $ExtractionPromptFile)) {
-                throw "Missing prompt file: $ExtractionPromptFile"
-            }
-
-            if (-not (Test-Path $NotesPromptFile)) {
-                throw "Missing prompt file: $NotesPromptFile"
-            }
 
             if (Test-Path $evidenceFile) {
 
