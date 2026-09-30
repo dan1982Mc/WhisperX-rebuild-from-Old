@@ -68,6 +68,9 @@ Maak een rijke, bruikbare vergadernotitie — GEEN kortere versie van het transc
 22. Voeg afzonderlijke gebeurtenissen niet samen alleen omdat ze over hetzelfde onderwerp of dezelfde persoon gaan.
 23. Een persoon die in een uitspraak wordt genoemd, is niet automatisch de spreker van die uitspraak. Houd de daadwerkelijke spreker van de evidence gescheiden van de persoon over wie of namens wie wordt gesproken.
 24. Als een toeschrijving of relatie niet eenduidig uit de evidence volgt, formuleer deze neutraal en zonder de ontbrekende relatie in te vullen.
+25. Neem in open_questions alleen inhoudelijke vergadervragen op die niet in de evidence zijn opgelost of beantwoord. Laat praktische, sociale, procedurele of openingsvragen weg, zoals vragen over kennismaking of het starten van een onderwerp.
+26. Verwar de spreker van een uitspraak nooit met de persoon die wordt aangesproken. Als spreker A tegen persoon B zegt dat B iets moet controleren, schrijf dit niet als een uitspraak van B. Formuleer het neutraal en brongetrouw, bijvoorbeeld dat spreker A tegen B zei dat B de informatie moest blijven controleren.
+27. Leid uit zo'n aanspreekvorm geen zelfstandig actiepunt, verantwoordelijkheid of besluit af. Neem het alleen op als relevante uitspraak; maak er pas een actiepunt van als de evidence expliciet laat zien dat een actie is afgesproken of toegewezen.
 
 Gebruik exact deze structuur:
 {
