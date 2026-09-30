@@ -1,0 +1,113 @@
+{
+  "generated_date": "2026-09-30T16:16:04",
+  "model": "mistral-meeting:16k",
+  "project_number": null,
+  "project_name": null,
+  "meeting_details": null,
+  "filename_base": "test Mistral 2",
+  "processed_date": null,
+  "participants": {
+    "SPEAKER_00": "Gert-Jan",
+    "SPEAKER_01": "Dennis",
+    "SPEAKER_02": "Ron",
+    "SPEAKER_03": "Richard"
+  },
+  "notes": {
+    "summary": "De vergadering behandelde de ingediende eisen en de reactie van de gemeente, inclusief de AI-geschreven berichten. Er was discussie over de waarheid van de informatie en de noodzaak om deze te controleren. Richard besprak een overleg met de stedenbouwer Ferry Adema, waarbij wijzigingen in het plan werden voorgesteld. Er was weerstand tegen deze wijzigingen, en er werd gezocht naar oplossingen binnen de bestaande kaders. Er werd ook gesproken over de communicatie met andere betrokkenen, zoals Richard Koek en Erwin.",
+    "key_discussion_points": [
+      {
+        "topic": "Ingediende eisen en reactie gemeente",
+        "details": "Op 10 maart waren eisen ingediend die door de gemeente moeten worden getoetst. De gemeente gooit informatie over de schutting, waardoor Dennis moet bewijzen dat bepaalde zaken niet hoeven. Het bericht van de gemeente was AI-geschreven.",
+        "timestamps": [
+          "00:00:00",
+          "00:00:05",
+          "00:00:08"
+        ]
+      },
+      {
+        "topic": "Waarheid en controle van informatie",
+        "details": "Ron twijfelt aan de waarheid van de informatie en benadrukt dat er op moet worden gelet. Gert-Jan moet de informatie blijven controleren.",
+        "timestamps": [
+          "00:00:13",
+          "00:00:16",
+          "00:00:21",
+          "00:00:24",
+          "00:00:26"
+        ]
+      },
+      {
+        "topic": "Overleg met stedenbouwer Ferry Adema",
+        "details": "Richard besprak een overleg met de stedenbouwer Ferry Adema, waarbij een welstandspresentatie en reflectie daarop werden gepresenteerd. Ferry deelde bestanden en stelde wijzigingen voor in het plan. Er was weerstand tegen deze wijzigingen van zowel Stadion als Gert-Jan.",
+        "timestamps": [
+          "00:00:47",
+          "00:00:56",
+          "00:01:09",
+          "00:01:14",
+          "00:01:26",
+          "00:02:36",
+          "00:02:41",
+          "00:02:44"
+        ]
+      },
+      {
+        "topic": "Oplossingen binnen bestaande kaders",
+        "details": "Richard vroeg hoe ze ervoor kunnen zorgen dat de wijzigingen door de bestaande kaders heen gaan lopen. Gert-Jan suggereerde terug te keren naar de NVU en binnen die kaders te blijven. Er werd gezocht naar oplossingen voor de problemen.",
+        "timestamps": [
+          "00:01:36",
+          "00:01:41",
+          "00:01:48",
+          "00:01:50",
+          "00:02:00",
+          "00:02:56"
+        ]
+      },
+      {
+        "topic": "Communicatie met andere betrokkenen",
+        "details": "Richard had vooraf gesproken met Ingeborg en gecontroleerd bij Richard Koek. Hij had ook een bijeenkomst met Ferry Adema, waarbij Ferry de wijzigingen in het plan erkende.",
+        "timestamps": [
+          "00:02:14",
+          "00:02:27"
+        ]
+      }
+    ],
+    "decisions": [],
+    "statements_and_conclusions": [
+      {
+        "statement": "Het is nog niet gebouwd, laten we nu kijken hoe het gewoon goed kan gaan.",
+        "speaker": "Richard",
+        "timestamps": [
+          "00:02:56"
+        ]
+      }
+    ],
+    "proposed_actions": [],
+    "confirmed_action_items": [],
+    "important_dates": [
+      {
+        "date": "10 maart",
+        "description": "Datum waarop eisen zijn ingediend.",
+        "timestamps": [
+          "00:00:00"
+        ]
+      }
+    ],
+    "open_questions": [
+      {
+        "question": "Is dit weer een nieuwe mening?",
+        "timestamps": [
+          "00:01:36"
+        ]
+      },
+      {
+        "question": "Hoe gaan we zorgen dat dit er nu doorheen gaat lopen?",
+        "timestamps": [
+          "00:01:41"
+        ]
+      }
+    ],
+    "additional_notes": [
+      "Ron noemde Vlietpoort als locatie.",
+      "Richard vroeg of iedereen elkaar kent en of hij een persoon even mag aftrappen."
+    ]
+  }
+}
