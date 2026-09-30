@@ -85,8 +85,9 @@ Gebruik exact deze structuur:
 
 
 def load_json(path: Path) -> Any:
+    """Load JSON robustly, accepting both UTF-8 and UTF-8-with-BOM files."""
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8-sig"))
     except FileNotFoundError:
         raise RuntimeError(f"Bestand niet gevonden: {path}")
     except json.JSONDecodeError as exc:
