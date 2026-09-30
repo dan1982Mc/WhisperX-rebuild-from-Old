@@ -318,14 +318,16 @@ def add_markdown_content(doc, text):
 def create_document(
     input_file,
     output_file,
+    input_text=None,
     project,
     meeting,
     date_string
 ):
 
-    markdown = Path(input_file).read_text(
-        encoding="utf-8"
-    )
+    if input_text is not None:
+        markdown = input_text
+    else:
+        markdown = Path(input_file).read_text(encoding="utf-8")
 
     doc = Document()
 
@@ -466,10 +468,9 @@ def main():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        "--input",
-        required=True
-    )
+    parser.add_argument("--input")
+
+    parser.add_argument("--input-text")
 
     parser.add_argument(
         "--output",
@@ -493,12 +494,16 @@ def main():
 
     args = parser.parse_args()
 
+    if not args.input and args.input_text is None:
+        parser.error("one of --input or --input-text is required")
+
     create_document(
         args.input,
         args.output,
         args.project,
         args.meeting,
-        args.date
+        args.date,
+        input_text=args.input_text
     )
 
     print(
