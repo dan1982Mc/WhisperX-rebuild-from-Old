@@ -194,14 +194,26 @@ while ($true) {
                 prompt = $prompt
                 stream = $false
                 keep_alive = "10m"
+                options = @{
+                    num_ctx = 16384
+                }
             } |
             ConvertTo-Json -Depth 10
 
-            $response = Invoke-RestMethod `
-                -Uri $OllamaUrl `
-                -Method Post `
-                -ContentType "application/json" `
-                -Body $body
+            try {
+                $response = Invoke-RestMethod 
+                    -Uri $OllamaUrl 
+                    -Method Post 
+                    -ContentType "application/json" 
+                    -Body $body
+            }
+            catch {
+                $serverError = $_.ErrorDetails.Message
+                if ([string]::IsNullOrWhiteSpace($serverError)) {
+                    $serverError = $_.Exception.Message
+                }
+                throw "Ollama Stage 2 error: $serverError"
+            }
 
             # -------------------------------------------------
             # Save ONLY final Qwen response
