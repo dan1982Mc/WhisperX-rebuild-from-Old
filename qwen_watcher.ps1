@@ -115,36 +115,51 @@ while ($true) {
                 throw "Missing prompt file: $NotesPromptFile"
             }
 
-            $extractionPrompt = Get-Content $ExtractionPromptFile -Raw
-            $extractionPrompt = $extractionPrompt.Replace("{{PARTICIPANTS}}", $participantText)
-            $extractionPrompt = $extractionPrompt.Replace("{{TRANSCRIPT}}", $transcript)
+            if (Test-Path $evidenceFile) {
 
-            Write-Host "Stage 1: extracting structured evidence..."
+                Write-Host "Existing evidence found: $evidenceFile" -ForegroundColor DarkGray
 
-            $body = @{
-                model = $Model
-                prompt = $extractionPrompt
-                stream = $false
-                keep_alive = "10m"
-            } | ConvertTo-Json -Depth 10
+                $evidence = Get-Content $evidenceFile -Raw | ConvertFrom-Json
 
-            $extractionResponse = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json" -Body $body
+                if (-not $evidence.evidence) {
+                    throw "Existing evidence file contains no evidence items."
+                }
 
-            $evidenceText = $extractionResponse.response.Trim()
-            $fence = ([char]96).ToString()
-            $evidenceText = $evidenceText.Replace($fence + $fence + $fence + "json", "").Replace($fence + $fence + $fence, "").Trim()
-
-            $evidence = $evidenceText | ConvertFrom-Json
-
-            if (-not $evidence.evidence) {
-                throw "Stage 1 returned no evidence items."
             }
+            else {
 
-            $evidenceFile = Join-Path $file.DirectoryName ($file.BaseName -replace "_for_qwen$","_evidence.json")
+                $transcript = Get-Content $file.FullName -Raw
 
-            $evidence | ConvertTo-Json -Depth 20 | Set-Content -Path $evidenceFile -Encoding UTF8
+                $extractionPrompt = Get-Content $ExtractionPromptFile -Raw
+                $extractionPrompt = $extractionPrompt.Replace("{{PARTICIPANTS}}", $participantText)
+                $extractionPrompt = $extractionPrompt.Replace("{{TRANSCRIPT}}", $transcript)
 
-            Write-Host "Created evidence: $evidenceFile" -ForegroundColor Yellow
+                Write-Host "Sending to Qwen: $($file.Name)"
+                Write-Host "Stage 1: extracting structured evidence..."
+
+                $body = @{
+                    model = $Model
+                    prompt = $extractionPrompt
+                    stream = $false
+                    keep_alive = "10m"
+                } | ConvertTo-Json -Depth 10
+
+                $extractionResponse = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json" -Body $body
+
+                $evidenceText = $extractionResponse.response.Trim()
+                $fence = ([char]96).ToString()
+                $evidenceText = $evidenceText.Replace($fence + $fence + $fence + "json", "").Replace($fence + $fence + $fence, "").Trim()
+
+                $evidence = $evidenceText | ConvertFrom-Json
+
+                if (-not $evidence.evidence) {
+                    throw "Stage 1 returned no evidence items."
+                }
+
+                $evidence | ConvertTo-Json -Depth 20 | Set-Content -Path $evidenceFile -Encoding UTF8
+
+                Write-Host "Created evidence: $evidenceFile" -ForegroundColor Yellow
+            }
 
             # -------------------------------------------------
             # Stage 2: generate meeting notes from evidence
