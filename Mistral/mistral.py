@@ -53,10 +53,13 @@ Maak een rijke, bruikbare vergadernotitie — GEEN kortere versie van het transc
 10. Als verantwoordelijke of deadline niet expliciet bekend is, gebruik "Niet genoemd".
 11. Maak geen nieuwe oorzaak-gevolgrelaties en presenteer geen implicatie als uitgesproken conclusie.
 12. Behoud onzekerheid en tegengestelde standpunten wanneer relevant.
-13. Neem belangrijke data, cijfers, namen, documenten, locaties, voorwaarden en afhankelijkheden op wanneer de evidence ze ondersteunt.
+13. Neem belangrijke data, cijfers, namen, documenten, locaties, voorwaarden en afhankelijkheden op wanneer de evidence ze ondersteunt. Een relevante concrete datum die in de evidence staat moet, als die inhoudelijk betekenisvol is voor de vergadering, ook in `important_dates` worden opgenomen.
 14. De summary is een inhoudelijke synthese, geen chronologische opsomming.
 15. Gebruik transcript-timestamps als bronverwijzing. Gebruik GEEN evidence-ID's.
 16. Elk substantieel item moet één of meer timestamps bevatten die daadwerkelijk in de evidence voorkomen. Maak nooit zelf een timestamp.
+17. Maak van afzonderlijke gebeurtenissen of gespreksfasen afzonderlijke key_discussion_points wanneer dat de inhoudelijke structuur duidelijker maakt. Voeg niet alleen vanwege een gedeeld onderwerp alle timestamps samen in één bespreekpunt.
+18. Een key_discussion_point moet alleen timestamps bevatten die daadwerkelijk bij het beschreven onderwerp of de beschreven gebeurtenis horen. Neem geen latere of eerdere gebeurtenissen op alleen omdat dezelfde persoon of hetzelfde onderwerp opnieuw voorkomt.
+19. Houd in key_discussion_points afzonderlijke gebeurtenissen, gesprekken en gerapporteerde informatie gescheiden wanneer de evidence geen expliciete relatie tussen die gebeurtenissen legt.
 17. Corrigeer alleen duidelijke transcriptiefouten als de aangeleverde evidence dit ondubbelzinnig ondersteunt.
 18. Geef alleen geldig JSON terug, zonder Markdown of code fences.
 
