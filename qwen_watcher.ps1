@@ -2,6 +2,8 @@ $OutputRoot = "$PSScriptRoot\2_Processing"
 $MeetingNotesRoot = "$PSScriptRoot\3_Meeting Notes"
 $OllamaUrl = "http://localhost:11434/api/generate"
 $Model = "qwen3:30b"
+$Python = "$PSScriptRoot\.venv\Scripts\python.exe"
+$DocxScript = "$PSScriptRoot\Qwen\create_meeting_docx.py"
 
 Write-Host "Qwen watcher started."
 Write-Host "Watching: $OutputRoot"
@@ -31,11 +33,14 @@ while ($true) {
                 continue
             }
 
-            $outputFile = Join-Path $MeetingNotesRoot ($file.BaseName -replace "_for_qwen$","_meeting_notes.txt")
+            $outputBase = Join-Path $MeetingNotesRoot ($file.BaseName -replace "_for_qwen$","_meeting_notes")
+            $outputFile = "$outputBase.txt"
+            $outputJsonFile = "$outputBase.json"
+            $outputDocxFile = "$outputBase.docx"
             $evidenceFile = Join-Path $file.DirectoryName ($file.BaseName -replace "_for_qwen$","_evidence.json")
 
             # Completed meetings must not be processed again after watcher restart.
-            if (Test-Path $outputFile) {
+            if ((Test-Path $outputFile) -and (Test-Path $outputJsonFile) -and (Test-Path $outputDocxFile)) {
                 Write-Host "Already completed: $($file.Name)" -ForegroundColor DarkGray
                 $processed[$file.FullName] = $true
                 continue
@@ -106,6 +111,13 @@ while ($true) {
             }
             if (-not (Test-Path $NotesPromptFile)) {
                 throw "Missing prompt file: $NotesPromptFile"
+            }
+
+            if (-not (Test-Path $Python)) {
+                throw "Missing Python environment: $Python"
+            }
+            if (-not (Test-Path $DocxScript)) {
+                throw "Missing DOCX script: $DocxScript"
             }
 
             $transcript = Get-Content `
@@ -214,12 +226,8 @@ while ($true) {
             }
 
             # -------------------------------------------------
-            # Save ONLY final Qwen response
+            # Save final Qwen response
             # -------------------------------------------------
-
-            $outputFile = Join-Path `
-                $MeetingNotesRoot `
-                ($file.BaseName -replace "_for_qwen$","_meeting_notes.txt")
 
             New-Item -ItemType Directory -Force $MeetingNotesRoot | Out-Null
 
@@ -228,12 +236,79 @@ while ($true) {
                     -Path $outputFile `
                     -Encoding UTF8
 
+            # -------------------------------------------------
+            # Save machine-readable meeting notes JSON
+            # -------------------------------------------------
+
+            $meetingName = $file.BaseName -replace "_for_qwen$",""
+            $jsonSections = [ordered]@{}
+            $currentSection = $null
+            $sectionLines = New-Object System.Collections.Generic.List[string]
+
+            foreach ($line in ($response.response -split "`n")) {
+                $trimmed = $line.TrimEnd("`r")
+
+                if ($trimmed -match "^## (.+)$") {
+                    if ($null -ne $currentSection) {
+                        $jsonSections[$currentSection] = @($sectionLines.ToArray())
+                    }
+                    $currentSection = $Matches[1].Trim()
+                    $sectionLines = New-Object System.Collections.Generic.List[string]
+                    continue
+                }
+
+                if ($null -ne $currentSection) {
+                    [void]$sectionLines.Add($trimmed)
+                }
+            }
+
+            if ($null -ne $currentSection) {
+                $jsonSections[$currentSection] = @($sectionLines.ToArray())
+            }
+
+            $notesJson = [ordered]@{
+                meeting = $meetingName
+                generated_at = (Get-Date).ToString("o")
+                source_markdown = [System.IO.Path]::GetFileName($outputFile)
+                sections = $jsonSections
+            }
+
+            $notesJson |
+                ConvertTo-Json -Depth 20 |
+                Set-Content -Path $outputJsonFile -Encoding UTF8
+
+            # -------------------------------------------------
+            # Create formatted DOCX from the final meeting notes
+            # -------------------------------------------------
+
+            $audioFile = Get-ChildItem $file.DirectoryName -File |
+                Where-Object { $_.Extension -in @(".wav",".mp3",".m4a",".flac",".mp4",".aac",".ogg",".wma") } |
+                Select-Object -First 1
+
+            if ($audioFile) {
+                $meetingDate = $audioFile.LastWriteTime.ToString("dd-MM-yyyy")
+            }
+            else {
+                $meetingDate = (Get-Date).ToString("dd-MM-yyyy")
+            }
+
+            & $Python $DocxScript
+                --input $outputFile
+                --output $outputDocxFile
+                --project "WhisperX"
+                --meeting $meetingName
+                --date $meetingDate
+
+            if ($LASTEXITCODE -ne 0 -or -not (Test-Path $outputDocxFile)) {
+                throw "DOCX creation failed for $meetingName"
+            }
+
             $processed[$file.FullName] = $true
 
-            Write-Host "Created: $outputFile" `
-                -ForegroundColor Green
+            Write-Host "Created: $outputFile" -ForegroundColor Green
+            Write-Host "Created: $outputJsonFile" -ForegroundColor Green
+            Write-Host "Created: $outputDocxFile" -ForegroundColor Green
 
-            Write-Host ""
 
         }
         catch {
