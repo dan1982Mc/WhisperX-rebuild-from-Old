@@ -39,7 +39,7 @@ while ($true) {
             $evidenceFile = Join-Path $file.DirectoryName ($file.BaseName -replace "_for_qwen$","_evidence.json")
 
             # Completed meetings must not be processed again after watcher restart.
-            if ((Test-Path $outputJsonFile) -and (Test-Path $outputDocxFile)) {
+            if (Test-Path $outputJsonFile) {
                 Write-Host "Already completed: $($file.Name)" -ForegroundColor DarkGray
                 $processed[$file.FullName] = $true
                 continue
@@ -190,39 +190,49 @@ while ($true) {
             # Stage 2: generate meeting notes from evidence
             # -------------------------------------------------
 
-            $evidenceJson = Get-Content $evidenceFile -Raw
-
-            $prompt = Get-Content $NotesPromptFile -Raw
-            $prompt = $prompt.Replace("{{PARTICIPANTS}}", $participantText)
-            $prompt = $prompt.Replace("{{EVIDENCE}}", $evidenceJson)
-
-            Write-Host "Stage 2: generating meeting notes..."
-
-            $body = @{
-                model = $Model
-                prompt = $prompt
-                stream = $false
-                keep_alive = "10m"
-                options = @{
-                    num_ctx = 16384
+            if (Test-Path $outputJsonFile) {
+                Write-Host "Existing meeting notes JSON found: $outputJsonFile" -ForegroundColor DarkGray
+                $notesData = Get-Content $outputJsonFile -Raw | ConvertFrom-Json
+                $finalNotes = [string]$notesData.markdown
+                if ([string]::IsNullOrWhiteSpace($finalNotes)) {
+                    throw "Existing meeting notes JSON contains no markdown source."
                 }
-            } | ConvertTo-Json -Depth 10
-
-            try {
-                $bodyBytes = [System.Text.Encoding]::UTF8.GetBytes($body)
-                $response = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json; charset=utf-8" -Body $bodyBytes
             }
-            catch {
-                $serverError = $_.ErrorDetails.Message
-                if ([string]::IsNullOrWhiteSpace($serverError)) {
-                    $serverError = $_.Exception.Message
+            else {
+                $evidenceJson = Get-Content $evidenceFile -Raw
+
+                $prompt = Get-Content $NotesPromptFile -Raw
+                $prompt = $prompt.Replace("{{PARTICIPANTS}}", $participantText)
+                $prompt = $prompt.Replace("{{EVIDENCE}}", $evidenceJson)
+
+                Write-Host "Stage 2: generating meeting notes..."
+
+                $body = @{
+                    model = $Model
+                    prompt = $prompt
+                    stream = $false
+                    keep_alive = "10m"
+                    options = @{
+                        num_ctx = 16384
+                    }
+                } | ConvertTo-Json -Depth 10
+
+                try {
+                    $bodyBytes = [System.Text.Encoding]::UTF8.GetBytes($body)
+                    $response = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json; charset=utf-8" -Body $bodyBytes
                 }
-                throw "Ollama Stage 2 error: $serverError"
-            }
+                catch {
+                    $serverError = $_.ErrorDetails.Message
+                    if ([string]::IsNullOrWhiteSpace($serverError)) {
+                        $serverError = $_.Exception.Message
+                    }
+                    throw "Ollama Stage 2 error: $serverError"
+                }
 
-            $finalNotes = $response.response
-            if ([string]::IsNullOrWhiteSpace($finalNotes)) {
-                throw "Stage 2 returned empty meeting notes."
+                $finalNotes = $response.response
+                if ([string]::IsNullOrWhiteSpace($finalNotes)) {
+                    throw "Stage 2 returned empty meeting notes."
+                }
             }
 
             # -------------------------------------------------
@@ -260,6 +270,7 @@ while ($true) {
                 meeting = $meetingName
                 generated_at = (Get-Date).ToString("o")
                 sections = $jsonSections
+                markdown = $finalNotes
             }
 
             $notesJson |
@@ -282,7 +293,7 @@ while ($true) {
             }
 
             & $Python $DocxScript `
-                --input $file.FullName `
+                --input-text $finalNotes `
                 --output $outputDocxFile `
                 --project "WhisperX" `
                 --meeting $meetingName `
