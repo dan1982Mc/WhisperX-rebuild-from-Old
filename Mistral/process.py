@@ -75,7 +75,16 @@ def process_one(transcript: Path, output_dir: Path, model: str, ollama_url: str,
     try:
         if not evidence.exists():
             logger.info("Stage 1/2: extracting evidence: %s", transcript.name)
-            extract_evidence(transcript, participants, evidence, model, ollama_url)
+            failed = output_dir / "failed"
+            raw_response = failed / f"{base}_evidence_raw.txt"
+            extract_evidence(
+                transcript,
+                participants,
+                evidence,
+                model,
+                ollama_url,
+                raw_response_path=raw_response
+            )
         else:
             logger.info("Using existing evidence: %s", evidence)
         logger.info("Stage 2/2: generating meeting notes: %s", transcript.name)
