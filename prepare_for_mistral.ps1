@@ -35,10 +35,6 @@ while ($true) {
             }
 
             $participantsFile = Join-Path $outputDirectory "participants.json"
-            if (-not (Test-Path $participantsFile)) {
-                Write-Host "Waiting for participants.json: $participantsFile" -ForegroundColor Yellow
-                continue
-            }
 
             $speakers = @(
                 $json.segments |
@@ -46,6 +42,37 @@ while ($true) {
                 Select-Object -ExpandProperty speaker -Unique |
                 Sort-Object
             )
+
+            # Automatically create participant mapping from WhisperX speaker IDs.
+            # Never guess human identities.
+            if (-not (Test-Path $participantsFile)) {
+                $participantMap = [ordered]@{}
+                foreach ($speaker in $speakers) { $participantMap[$speaker] = "" }
+                ([ordered]@{ participants = $participantMap } | ConvertTo-Json -Depth 4) |
+                    Set-Content -Path $participantsFile -Encoding UTF8
+                Write-Host "Created participant mapping: $participantsFile" -ForegroundColor Green
+                Write-Host "Fill in participant names before Mistral processing continues." -ForegroundColor Yellow
+            } else {
+                $participantData = Get-Content $participantsFile -Raw | ConvertFrom-Json
+                $changed = $false
+                foreach ($speaker in $speakers) {
+                    if (-not $participantData.participants.PSObject.Properties[$speaker]) {
+                        $participantData.participants | Add-Member -NotePropertyName $speaker -NotePropertyValue ""
+                        $changed = $true
+                    }
+                }
+                if ($changed) {
+                    $participantData | ConvertTo-Json -Depth 4 | Set-Content -Path $participantsFile -Encoding UTF8
+                }
+            }
+
+            $participantData = Get-Content $participantsFile -Raw | ConvertFrom-Json
+            $unassigned = @($participantData.participants.PSObject.Properties |
+                Where-Object { [string]::IsNullOrWhiteSpace([string]$_.Value) })
+            if ($unassigned.Count -gt 0) {
+                Write-Host "Waiting for participant names in $participantsFile" -ForegroundColor Yellow
+                continue
+            }
 
             $lines = New-Object System.Collections.Generic.List[string]
             $lines.Add("# Meeting transcript")
@@ -82,8 +109,10 @@ while ($true) {
             $lines.Add("Use participants.json as the only source for participant names.")
             $lines.Add("Do not guess participant identities.")
             $lines.Add("Preserve timestamps and speaker attribution.")
-            $lines.Add("Extract evidence only when supported by the transcript.")
-            $lines.Add("Do not invent information.")
+            $lines.Add("Extract source-grounded evidence only.")
+            $lines.Add("Preserve meaningful information, speaker attribution and timestamps.")
+            $lines.Add("Do not discard relevant information merely because it is short.")
+            $lines.Add("Do not invent facts, conclusions, decisions or actions.")
             $lines.Add("Do not write meeting notes at this stage.")
             $lines.Add("")
 
