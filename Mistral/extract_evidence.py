@@ -224,7 +224,7 @@ def split_transcript(transcript: str, max_chars: int) -> list[str]:
 
     import re
 
-    matches = list(re.finditer(r"(?m)^### \\[\\d{2}:\\d{2}:\\d{2}\\] ", transcript))
+    matches = list(re.finditer(r"(?m)^### \[\d{2}:\d{2}:\d{2}\] ", transcript))
     if not matches:
         raise RuntimeError(
             f"Transcript is {len(transcript)} characters long and contains no "
