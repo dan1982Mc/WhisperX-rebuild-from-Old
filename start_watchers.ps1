@@ -1,4 +1,4 @@
-$base = "E:\AAA\WhisperX"
+$base = $PSScriptRoot
 
 Write-Host "Starting Meeting AI pipeline..."
 
