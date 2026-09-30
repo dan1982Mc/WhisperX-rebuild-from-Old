@@ -1,4 +1,4 @@
-$OutputRoot = "E:\AAA\WhisperX\Meetings\Output"
+$OutputRoot = "$PSScriptRoot\2_Processing"
 
 Write-Host "Stage 2 watcher started."
 Write-Host "Watching: $OutputRoot"
