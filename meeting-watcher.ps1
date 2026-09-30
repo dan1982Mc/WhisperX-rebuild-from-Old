@@ -1,13 +1,11 @@
-$Base = "E:\AAA\WhisperX\Meetings"
+$Base = $PSScriptRoot
 
-$Incoming  = "$Base\Incoming"
-$Processing = "$Base\Processing"
-$Completed = "$Base\Completed"
+$Incoming  = "$Base\1_Incoming"
+$Processing = "$Base\2_Processing"
 $Failed    = "$Base\Failed"
-$Output    = "$Base\Output"
 $LogFile   = "$Base\Logs\meeting-watcher.log"
 
-$WhisperX = "E:\AAA\WhisperX\.venv\Scripts\whisperx.exe"
+$WhisperX = "$Base\.venv\Scripts\whisperx.exe"
 
 $Prompt = "Nederlandstalig overleg over architectuur, stedenbouw, bouwplannen en gemeentelijke procedures. Namen en termen: Vlietpoort, Gert-Jan, Ron van der Meer, Erwin Westra, Jos van Boxtel, Ferry Adema, Ingeborg, Richard Koek, NVU."
 
@@ -39,15 +37,15 @@ while ($true) {
             continue
         }
 
-        $ProcessingFile = Join-Path $Processing $file.Name
+        $Name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+            $ProcessingDir = Join-Path $Processing $Name
+            $ProcessingFile = Join-Path $ProcessingDir $file.Name
 
         try {
+            New-Item -ItemType Directory -Force $ProcessingDir | Out-Null
             Move-Item $file.FullName $ProcessingFile -ErrorAction Stop
 
-            $Name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-            $OutputDir = Join-Path $Output $Name
-
-            New-Item -ItemType Directory -Force $OutputDir | Out-Null
+            $OutputDir = $ProcessingDir
 
             Add-Content $LogFile "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') START $($file.Name)"
 
@@ -68,7 +66,7 @@ while ($true) {
 
             if ($LASTEXITCODE -eq 0) {
 
-                Move-Item $ProcessingFile $Completed -Force
+                Move-Item $ProcessingFile $ProcessingDir -Force
 
                 Add-Content $LogFile "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') SUCCESS $($file.Name)"
 
