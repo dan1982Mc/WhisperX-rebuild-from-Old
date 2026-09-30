@@ -318,10 +318,10 @@ def add_markdown_content(doc, text):
 def create_document(
     input_file,
     output_file,
-    input_text=None,
     project,
     meeting,
-    date_string
+    date_string,
+    input_text=None
 ):
 
     if input_text is not None:
