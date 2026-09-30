@@ -1,0 +1,344 @@
+﻿{
+    "evidence":  [
+                     {
+                         "id":  "E001",
+                         "type":  "statement",
+                         "speaker_id":  "SPEAKER_01",
+                         "speaker":  "Dennis",
+                         "timestamp":  "00:00:00",
+                         "content":  "10 maart hadden we ingediend en op dat moment geldende eisen moeten ze aan toetsen.",
+                         "status":  "explicit",
+                         "source_text":  "10 maart hadden we ingediend en op dat moment geldende eisen moeten ze aan toetsen."
+                     },
+                     {
+                         "id":  "E002",
+                         "type":  "statement",
+                         "speaker_id":  "SPEAKER_01",
+                         "speaker":  "Dennis",
+                         "timestamp":  "00:00:05",
+                         "content":  "Maar ze gooien het wel over de schutting, dus vervolgens moet ik gaan bewijzen dat het niet hoeft.",
+                         "status":  "explicit",
+                         "source_text":  "Maar ze gooien het wel over de schutting, dus vervolgens moet ik gaan bewijzen dat het niet hoeft."
+                     },
+                     {
+                         "id":  "E003",
+                         "type":  "statement",
+                         "speaker_id":  "SPEAKER_01",
+                         "speaker":  "Dennis",
+                         "timestamp":  "00:00:08",
+                         "content":  "Dat berichtje van de gemeente was ook AI geschreven.",
+                         "status":  "explicit",
+                         "source_text":  "Dat berichtje van de gemeente was ook AI geschreven."
+                     },
+                     {
+                         "id":  "E004",
+                         "type":  "statement",
+                         "speaker_id":  "SPEAKER_02",
+                         "speaker":  "Ron",
+                         "timestamp":  "00:00:13",
+                         "content":  "Nou, dat weet ik niet.",
+                         "status":  "explicit",
+                         "source_text":  "Nou, dat weet ik niet."
+                     },
+                     {
+                         "id":  "E005",
+                         "type":  "statement",
+                         "speaker_id":  "SPEAKER_02",
+                         "speaker":  "Ron",
+                         "timestamp":  "00:00:16",
+                         "content":  "Ik had het idee van niet.",
+                         "status":  "explicit",
+                         "source_text":  "Ik had het idee van niet."
+                     },
+                     {
+                         "id":  "E006",
+                         "type":  "action",
+                         "speaker_id":  "SPEAKER_00",
+                         "speaker":  "Gert-Jan",
+                         "timestamp":  "00:00:21",
+                         "content":  "Je moet het wel blijven controleren.",
+                         "status":  "explicit",
+                         "source_text":  "Gert-Jan, je moet het wel blijven controleren."
+                     },
+                     {
+                         "id":  "E007",
+                         "type":  "opinion",
+                         "speaker_id":  "SPEAKER_02",
+                         "speaker":  "Ron",
+                         "timestamp":  "00:00:24",
+                         "content":  "Want het is niet allemaal de waarheid.",
+                         "status":  "explicit",
+                         "source_text":  "Want het is niet allemaal de waarheid."
+                     },
+                     {
+                         "id":  "E008",
+                         "type":  "opinion",
+                         "speaker_id":  "SPEAKER_02",
+                         "speaker":  "Ron",
+                         "timestamp":  "00:00:26",
+                         "content":  "Nee, zeker.",
+                         "status":  "explicit",
+                         "source_text":  "Nee, zeker."
+                     },
+                     {
+                         "id":  "E009",
+                         "type":  "action",
+                         "speaker_id":  "SPEAKER_02",
+                         "speaker":  "Ron",
+                         "timestamp":  "00:00:26",
+                         "content":  "Je moet er wel op letten.",
+                         "status":  "explicit",
+                         "source_text":  "Je moet er wel op letten."
+                     },
+                     {
+                         "id":  "E010",
+                         "type":  "statement",
+                         "speaker_id":  "SPEAKER_02",
+                         "speaker":  "Ron",
+                         "timestamp":  "00:00:29",
+                         "content":  "Maar goed, Vlietpoort.",
+                         "status":  "explicit",
+                         "source_text":  "Maar goed, Vlietpoort."
+                     },
+                     {
+                         "id":  "E011",
+                         "type":  "question",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:00:33",
+                         "content":  "Iedereen kent iedereen?",
+                         "status":  "explicit",
+                         "source_text":  "Iedereen kent iedereen?"
+                     },
+                     {
+                         "id":  "E012",
+                         "type":  "statement",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:00:34",
+                         "content":  "Ja, volgens mij wel.",
+                         "status":  "explicit",
+                         "source_text":  "Ja, volgens mij wel."
+                     },
+                     {
+                         "id":  "E013",
+                         "type":  "question",
+                         "speaker_id":  "SPEAKER_02",
+                         "speaker":  "Ron",
+                         "timestamp":  "00:00:36",
+                         "content":  "Niet?",
+                         "status":  "explicit",
+                         "source_text":  "Niet?"
+                     },
+                     {
+                         "id":  "E014",
+                         "type":  "question",
+                         "speaker_id":  "SPEAKER_02",
+                         "speaker":  "Ron",
+                         "timestamp":  "00:00:38",
+                         "content":  "Nee?",
+                         "status":  "explicit",
+                         "source_text":  "Nee?"
+                     },
+                     {
+                         "id":  "E015",
+                         "type":  "question",
+                         "speaker_id":  "SPEAKER_02",
+                         "speaker":  "Ron",
+                         "timestamp":  "00:00:39",
+                         "content":  "Ja?",
+                         "status":  "explicit",
+                         "source_text":  "Ja?"
+                     },
+                     {
+                         "id":  "E016",
+                         "type":  "statement",
+                         "speaker_id":  "SPEAKER_02",
+                         "speaker":  "Ron",
+                         "timestamp":  "00:00:39",
+                         "content":  "Mooi.",
+                         "status":  "explicit",
+                         "source_text":  "Mooi."
+                     },
+                     {
+                         "id":  "E017",
+                         "type":  "question",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:00:43",
+                         "content":  "Zal ik hem even aftrappen?",
+                         "status":  "explicit",
+                         "source_text":  "Zal ik hem even aftrappen?"
+                     },
+                     {
+                         "id":  "E018",
+                         "type":  "statement",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:00:45",
+                         "content":  "Ja.",
+                         "status":  "explicit",
+                         "source_text":  "Ja."
+                     },
+                     {
+                         "id":  "E019",
+                         "type":  "statement",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:00:47",
+                         "content":  "Wij hebben een overleg gehad met de stedenbouwer van dienst, Ferry Adema.",
+                         "status":  "explicit",
+                         "source_text":  "Wij hebben een overleg gehad met de stedenbouwer van dienst, Ferry Adema."
+                     },
+                     {
+                         "id":  "E020",
+                         "type":  "statement",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:00:56",
+                         "content":  "Daaruit kwam enerzijds de gepresenteerde welstandspresentatie en ook de reflectie daarop.",
+                         "status":  "explicit",
+                         "source_text":  "Daaruit kwam enerzijds de gepresenteerde welstandspresentatie en ook de reflectie daarop."
+                     },
+                     {
+                         "id":  "E021",
+                         "type":  "information",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:01:09",
+                         "content":  "Hij heeft die bestanden ook met ons gedeeld.",
+                         "status":  "explicit",
+                         "source_text":  "Hij heeft die bestanden ook met ons gedeeld."
+                     },
+                     {
+                         "id":  "E022",
+                         "type":  "proposal",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:01:14",
+                         "content":  "Daar kwamen een aantal behoorlijke wijzigingen die hij voorstelde.",
+                         "status":  "explicit",
+                         "source_text":  "Daar kwamen een aantal behoorlijke wijzigingen die hij voorstelde."
+                     },
+                     {
+                         "id":  "E023",
+                         "type":  "information",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:01:26",
+                         "content":  "En zowel bij Stadion als bij Gert-Jan kwam daaruit ook wel wat weerstand.",
+                         "status":  "explicit",
+                         "source_text":  "En zowel bij Stadion als bij Gert-Jan kwam daaruit ook wel wat weerstand."
+                     },
+                     {
+                         "id":  "E024",
+                         "type":  "question",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:01:36",
+                         "content":  "Hoe gaan we dit nou... Is dit weer een nieuwe mening?",
+                         "status":  "explicit",
+                         "source_text":  "Hoe gaan we dit nou... Is dit weer een nieuwe mening?"
+                     },
+                     {
+                         "id":  "E025",
+                         "type":  "question",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:01:41",
+                         "content":  "Hoe gaan we zorgen dat dit er nu doorheen gaat lopen?",
+                         "status":  "explicit",
+                         "source_text":  "Hoe gaan we zorgen dat dit er nu doorheen gaat lopen?"
+                     },
+                     {
+                         "id":  "E026",
+                         "type":  "reported",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:01:48",
+                         "content":  "dan kunnen we dan niet",
+                         "status":  "explicit",
+                         "source_text":  "Gert-Jan zei dan kunnen we dan niet."
+                     },
+                     {
+                         "id":  "E027",
+                         "type":  "statement",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:01:50",
+                         "content":  "Precies terug naar de NVU en dan binnen die kaders blijven.",
+                         "status":  "explicit",
+                         "source_text":  "Precies terug naar de NVU en dan binnen die kaders blijven."
+                     },
+                     {
+                         "id":  "E028",
+                         "type":  "information",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:02:00",
+                         "content":  "Voor nu een aantal weken geleden, twee weken, anderhalve week, is het goed om nu even daarop te reflecteren, maar vooral ook te kijken naar wat zijn de oplossingen.",
+                         "status":  "explicit",
+                         "source_text":  "Voor nu een aantal weken geleden, twee weken, anderhalve week, is het goed om nu even daarop te reflecteren, maar vooral ook te kijken naar wat zijn de oplossingen."
+                     },
+                     {
+                         "id":  "E029",
+                         "type":  "information",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:02:14",
+                         "content":  "Vooraf, en dat heb ik wel met Ingeborg besproken, nog niet met Erwin en met Gert-Jan, heb ik ook even gecontroleerd bij Richard Koek.",
+                         "status":  "explicit",
+                         "source_text":  "Vooraf, en dat heb ik wel met Ingeborg besproken, nog niet met Erwin en met Gert-Jan, heb ik ook even gecontroleerd bij Richard Koek."
+                     },
+                     {
+                         "id":  "E030",
+                         "type":  "reported",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:02:27",
+                         "content":  "we hebben overleg gehad met Ferry",
+                         "status":  "explicit",
+                         "source_text":  "Die sprak ik bij een bijeenkomst en die begon eigenlijk uit zichzelf te zeggen van, ik gaf aan, we hebben overleg gehad met Ferry."
+                     },
+                     {
+                         "id":  "E031",
+                         "type":  "information",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:02:36",
+                         "content":  "Er kwamen behoorlijke wijzigingen ten opzichte van het liggende plan uit voren.",
+                         "status":  "explicit",
+                         "source_text":  "Er kwamen behoorlijke wijzigingen ten opzichte van het liggende plan uit voren."
+                     },
+                     {
+                         "id":  "E032",
+                         "type":  "reported",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:02:41",
+                         "content":  "daar ben ik geweest",
+                         "status":  "explicit",
+                         "source_text":  "En toen gaf hij eigenlijk gelijk aan van, daar ben ik geweest."
+                     },
+                     {
+                         "id":  "E033",
+                         "type":  "reported",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:02:44",
+                         "content":  "doorgaan op het oude, dat gaat niet werken om deze en deze reden, die Ferry ook heeft aangegeven, dus het moet anders",
+                         "status":  "explicit",
+                         "source_text":  "Ik heb tegen Ferry gezegd van doorgaan op het oude, dat gaat niet werken om deze en deze reden, die Ferry ook heeft aangegeven, dus het moet anders."
+                     },
+                     {
+                         "id":  "E034",
+                         "type":  "information",
+                         "speaker_id":  "SPEAKER_03",
+                         "speaker":  "Richard",
+                         "timestamp":  "00:02:56",
+                         "content":  "Het is nog niet gebouwd, laten we nu kijken hoe het gewoon goed kan gaan.",
+                         "status":  "explicit",
+                         "source_text":  "Het is nog niet gebouwd, laten we nu kijken hoe het gewoon goed kan gaan."
+                     }
+                 ]
+}
