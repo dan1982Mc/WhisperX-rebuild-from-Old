@@ -324,8 +324,12 @@ def write_docx(
             p.add_run(str(metadata[key]))
 
     doc.add_heading("Deelnemers", level=1)
-    for name in participants.values():
-        doc.add_paragraph(name, style="List Bullet")
+    named = [name for name in participants.values() if name]
+    if named:
+        for name in named:
+            doc.add_paragraph(name, style="List Bullet")
+    else:
+        doc.add_paragraph("Nog niet ingevuld")
 
     doc.add_heading("Samenvatting", level=1)
     doc.add_paragraph(str(notes.get("summary") or "Niet beschikbaar"))
@@ -334,9 +338,7 @@ def write_docx(
     for item in as_list(notes.get("key_discussion_points")):
         if isinstance(item, dict):
             doc.add_heading(str(item.get("topic", "Onderwerp")), level=2)
-            doc.add_paragraph(str(item.get("details", "")))
-        else:
-            doc.add_paragraph(str(item), style="List Bullet")
+            doc.add_paragraph(str(item.get("details", "")) + render_timestamps(item))
 
     def bullet_section(title: str, items: list[Any], formatter) -> None:
         doc.add_heading(title, level=1)
@@ -349,26 +351,23 @@ def write_docx(
     bullet_section(
         "Besluiten",
         as_list(notes.get("decisions")),
-        lambda x: x.get("decision", "") if isinstance(x, dict) else str(x),
+        lambda x: (x.get("decision", "") + render_timestamps(x)) if isinstance(x, dict) else str(x),
     )
-
     bullet_section(
         "Uitspraken en conclusies",
         as_list(notes.get("statements_and_conclusions")),
         lambda x: (
-            f"{x.get('speaker')}: {x.get('statement')}"
+            f"{x.get('speaker')}: {x.get('statement', '')}{render_timestamps(x)}"
             if isinstance(x, dict) and x.get("speaker")
             else (x.get("statement", "") if isinstance(x, dict) else str(x))
         ),
     )
-
     bullet_section(
         "Voorgestelde acties",
         as_list(notes.get("proposed_actions")),
         lambda x: (
-            f"{x.get('action', '')} — Verantwoordelijke: "
-            f"{x.get('responsible', 'Niet genoemd')} — "
-            f"Deadline: {x.get('deadline', 'Niet genoemd')}"
+            f"{x.get('action', '')} — Verantwoordelijke: {x.get('responsible', 'Niet genoemd')} — "
+            f"Deadline: {x.get('deadline', 'Niet genoemd')}{render_timestamps(x)}"
             if isinstance(x, dict) else str(x)
         ),
     )
@@ -376,9 +375,9 @@ def write_docx(
     doc.add_heading("Bevestigde actiepunten", level=1)
     confirmed = as_list(notes.get("confirmed_action_items"))
     if confirmed:
-        table = doc.add_table(rows=1, cols=3)
+        table = doc.add_table(rows=1, cols=4)
         table.style = "Table Grid"
-        for cell, text in zip(table.rows[0].cells, ["Actie", "Verantwoordelijke", "Deadline"]):
+        for cell, text in zip(table.rows[0].cells, ["Actie", "Verantwoordelijke", "Deadline", "Bron"]):
             cell.text = text
         for item in confirmed:
             row = table.add_row().cells
@@ -386,34 +385,30 @@ def write_docx(
                 row[0].text = str(item.get("action", ""))
                 row[1].text = str(item.get("responsible", "Niet genoemd"))
                 row[2].text = str(item.get("deadline", "Niet genoemd"))
+                row[3].text = ", ".join(str(x) for x in item.get("timestamps", []) if x)
             else:
                 row[0].text = str(item)
                 row[1].text = "Niet genoemd"
                 row[2].text = "Niet genoemd"
-    else:
-        doc.add_paragraph("Geen bevestigde actiepunten.")
+                row[3].text = ""
 
     bullet_section(
         "Belangrijke data",
         as_list(notes.get("important_dates")),
         lambda x: (
-            f"{x.get('date', '')}: {x.get('description', '')}"
+            f"{x.get('date', '')}: {x.get('description', '')}{render_timestamps(x)}"
             if isinstance(x, dict) else str(x)
         ),
     )
-
     bullet_section(
         "Openstaande vragen",
         as_list(notes.get("open_questions")),
-        lambda x: x.get("question", "") if isinstance(x, dict) else str(x),
+        lambda x: (
+            f"{x.get('question', '')}{render_timestamps(x)}"
+            if isinstance(x, dict) else str(x)
+        ),
     )
-
-    bullet_section(
-        "Aanvullende opmerkingen",
-        as_list(notes.get("additional_notes")),
-        lambda x: str(x),
-    )
-
+    bullet_section("Aanvullende opmerkingen", as_list(notes.get("additional_notes")), lambda x: str(x))
     doc.save(path)
 
 
