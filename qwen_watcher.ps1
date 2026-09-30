@@ -201,11 +201,7 @@ while ($true) {
             ConvertTo-Json -Depth 10
 
             try {
-                $response = Invoke-RestMethod 
-                    -Uri $OllamaUrl 
-                    -Method Post 
-                    -ContentType "application/json" 
-                    -Body $body
+                $response = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json" -Body $body
             }
             catch {
                 $serverError = $_.ErrorDetails.Message
