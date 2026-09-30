@@ -41,11 +41,17 @@ while ($true) {
             $outputDocxFile = "$outputBase.docx"
             $evidenceFile = Join-Path $file.DirectoryName ($file.BaseName -replace "_for_qwen$","_evidence.json")
 
-            # Completed meetings must not be processed again after watcher restart.
-            if (Test-Path $outputJsonFile) {
+            # A meeting is complete only when both final outputs exist.
+            # If JSON exists but DOCX is missing, reuse the saved markdown and
+            # create the DOCX without calling Qwen again.
+            if ((Test-Path $outputJsonFile) -and (Test-Path $outputDocxFile)) {
                 Write-Host "Already completed: $($file.Name)" -ForegroundColor DarkGray
                 $processed[$file.FullName] = $true
                 continue
+            }
+
+            if (Test-Path $outputJsonFile) {
+                Write-Host "Meeting notes JSON found; DOCX missing: $($file.Name)" -ForegroundColor Yellow
             }
 
             # -------------------------------------------------
