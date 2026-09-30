@@ -21,7 +21,7 @@ Start-Sleep -Seconds 2
 Start-Process powershell.exe -ArgumentList @(
     "-NoProfile",
     "-ExecutionPolicy", "Bypass",
-    "-File", "$base\Mistral\watcher.py"
+    "-File", "$base\mistral_watcher.ps1"
 ) -WindowStyle Minimized
 
 Write-Host "WhisperX and Mistral pipeline started."
