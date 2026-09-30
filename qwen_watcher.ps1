@@ -1,4 +1,5 @@
-$OutputRoot = "E:\AAA\WhisperX\Meetings\Output"
+$OutputRoot = "$PSScriptRoot\2_Processing"
+$MeetingNotesRoot = "$PSScriptRoot\3_Meeting Notes"
 $OllamaUrl = "http://localhost:11434/api/generate"
 $Model = "qwen3:30b"
 
@@ -430,8 +431,10 @@ Hier eindigt het transcript.
             # -------------------------------------------------
 
             $outputFile = Join-Path `
-                $file.DirectoryName `
-                ($file.BaseName -replace "_for_qwen$","_meeting_notes.md")
+                $MeetingNotesRoot `
+                ($file.BaseName -replace "_for_qwen$","_meeting_notes.txt")
+
+            New-Item -ItemType Directory -Force $MeetingNotesRoot | Out-Null
 
             $response.response |
                 Set-Content `
