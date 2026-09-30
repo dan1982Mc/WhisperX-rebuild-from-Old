@@ -8,7 +8,8 @@ $processed = @{}
 
 while ($true) {
 
-    $files = Get-ChildItem $OutputRoot -Filter "*.json" -Recurse -File
+    $files = Get-ChildItem $OutputRoot -Filter "*.json" -Recurse -File |
+        Where-Object { $_.Name -ne "participants.json" }
 
     foreach ($file in $files) {
 
