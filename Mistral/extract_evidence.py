@@ -12,6 +12,35 @@ import requests
 
 DEFAULT_MODEL = "mistral-meeting:16k"
 DEFAULT_OLLAMA_URL = "http://localhost:11434"
+DEFAULT_MAX_CHARS_PER_CHUNK = 24000
+
+EVIDENCE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "evidence": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "type": {"type": "string"},
+                    "speaker_id": {"type": "string"},
+                    "speaker": {"type": "string"},
+                    "timestamp": {"type": "string"},
+                    "content": {"type": "string"},
+                    "status": {"type": "string"},
+                    "source_text": {"type": "string"},
+                },
+                "required": [
+                    "type", "speaker_id", "speaker", "timestamp",
+                    "content", "status", "source_text"
+                ],
+                "additionalProperties": False,
+            },
+        }
+    },
+    "required": ["evidence"],
+    "additionalProperties": False,
+}
 
 SYSTEM_PROMPT = """Je bent een nauwkeurige informatie-extractor voor Nederlandstalige vergadertranscripten.
 
@@ -112,18 +141,37 @@ def load_participants(path: Path | None) -> dict[str, str]:
         raise RuntimeError(f"Participants moet een JSON object zijn: {path}")
     return {str(k): str(v) for k, v in data.items()}
 
-def call_ollama(model: str, ollama_url: str, participants: dict[str, str], transcript: str, raw_response_path: Path | None = None) -> dict[str, Any]:
-    participant_text = "\n".join(f"{key} = {value}" for key, value in participants.items()) or "Geen namen beschikbaar."
+def call_ollama(
+    model: str,
+    ollama_url: str,
+    participants: dict[str, str],
+    transcript: str,
+    raw_response_path: Path | None = None,
+) -> dict[str, Any]:
+    participant_text = "\n".join(
+        f"{key} = {value}" for key, value in participants.items()
+    ) or "Geen namen beschikbaar."
+
     system = SYSTEM_PROMPT.replace("{{PARTICIPANTS}}", participant_text)
 
     payload = {
         "model": model,
         "stream": False,
-        "format": "json",
+        # Use Ollama structured output instead of generic JSON mode.
+        # Generic JSON mode only guarantees valid JSON, not the required schema.
+        "format": EVIDENCE_SCHEMA,
         "options": {"temperature": 0.1},
         "messages": [
             {"role": "system", "content": system},
-            {"role": "user", "content": transcript},
+            {
+                "role": "user",
+                "content": (
+                    "EXTRACTION INPUT. Analyseer uitsluitend de onderstaande "
+                    "WhisperX-transcripttekst. Geef uitsluitend het gevraagde "
+                    "evidence-object terug.\n\n"
+                    + transcript
+                ),
+            },
         ],
     }
 
@@ -161,21 +209,102 @@ def call_ollama(model: str, ollama_url: str, participants: dict[str, str], trans
 
     return result
 
-def extract_evidence(transcript_path: Path, participants_path: Path | None, output_path: Path, model: str = DEFAULT_MODEL, ollama_url: str = DEFAULT_OLLAMA_URL, raw_response_path: Path | None = None) -> Path:
+def prepare_transcript_text(transcript: str) -> str:
+    """Keep only the actual transcript and remove the generated instruction footer."""
+    marker = "\n---\n\n## Instructions for Mistral"
+    if marker in transcript:
+        transcript = transcript.split(marker, 1)[0]
+    return transcript.strip()
+
+def split_transcript(transcript: str, max_chars: int) -> list[str]:
+    """Split at WhisperX segment boundaries, never in the middle of a segment."""
+    transcript = prepare_transcript_text(transcript)
+    if len(transcript) <= max_chars:
+        return [transcript]
+
+    import re
+
+    matches = list(re.finditer(r"(?m)^### \\[\\d{2}:\\d{2}:\\d{2}\\] ", transcript))
+    if not matches:
+        raise RuntimeError(
+            f"Transcript is {len(transcript)} characters long and contains no "
+            "recognizable WhisperX segment boundaries."
+        )
+
+    prefix = transcript[:matches[0].start()].strip()
+    chunks: list[str] = []
+    current = prefix
+
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(transcript)
+        segment = transcript[match.start():end].strip()
+        candidate = f"{current}\n\n{segment}".strip() if current else segment
+
+        if current and len(candidate) > max_chars:
+            chunks.append(current)
+            current = f"{prefix}\n\n{segment}".strip() if prefix else segment
+        else:
+            current = candidate
+
+    if current:
+        chunks.append(current)
+
+    return chunks
+
+
+def extract_evidence(
+    transcript_path: Path,
+    participants_path: Path | None,
+    output_path: Path,
+    model: str = DEFAULT_MODEL,
+    ollama_url: str = DEFAULT_OLLAMA_URL,
+    raw_response_path: Path | None = None,
+    max_chars_per_chunk: int = DEFAULT_MAX_CHARS_PER_CHUNK,
+) -> Path:
     transcript = transcript_path.read_text(encoding="utf-8-sig")
     participants = load_participants(participants_path)
+    chunks = split_transcript(transcript, max_chars_per_chunk)
 
     print(f"Transcript       : {transcript_path}")
     print(f"Evidence model   : {model}")
+    print(f"Transcript chars : {len(prepare_transcript_text(transcript))}")
+    print(f"Evidence chunks  : {len(chunks)}")
     print("Mistral evidence-extractie gestart...")
 
-    evidence = call_ollama(model, ollama_url, participants, transcript, raw_response_path)
+    all_evidence: list[dict[str, Any]] = []
+
+    for index, chunk in enumerate(chunks, start=1):
+        if raw_response_path is not None:
+            if len(chunks) == 1:
+                chunk_raw_path = raw_response_path
+            else:
+                chunk_raw_path = raw_response_path.with_name(
+                    f"{raw_response_path.stem}_part{index:03d}{raw_response_path.suffix}"
+                )
+        else:
+            chunk_raw_path = None
+
+        print(f"Evidence chunk   : {index}/{len(chunks)} ({len(chunk)} chars)")
+        result = call_ollama(
+            model,
+            ollama_url,
+            participants,
+            chunk,
+            chunk_raw_path,
+        )
+        all_evidence.extend(result["evidence"])
+
+    combined = {"evidence": all_evidence}
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(evidence, ensure_ascii=False, indent=2), encoding="utf-8")
+    output_path.write_text(
+        json.dumps(combined, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
     print(f"Evidence         : {output_path}")
-    print(f"Evidence entries : {len(evidence['evidence'])}")
+    print(f"Evidence entries : {len(all_evidence)}")
     return output_path
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Extract meeting evidence with Mistral.")
@@ -184,9 +313,10 @@ def main() -> int:
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--ollama-url", default=DEFAULT_OLLAMA_URL)
+    parser.add_argument("--max-chars-per-chunk", type=int, default=DEFAULT_MAX_CHARS_PER_CHUNK)
     args = parser.parse_args()
 
-    extract_evidence(args.transcript, args.participants, args.output, args.model, args.ollama_url)
+    extract_evidence(\n        args.transcript, args.participants, args.output, args.model, args.ollama_url,\n        max_chars_per_chunk=args.max_chars_per_chunk\n    )
     return 0
 
 if __name__ == "__main__":
