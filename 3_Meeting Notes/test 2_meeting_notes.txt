@@ -1,43 +1,65 @@
-﻿# Vergadernotulen
+﻿# Vergaderingsnotitie
 
 ## Deelnemers
 Gert-Jan, Dennis, Ron, Richard
 
 ## Samenvatting
-De vergadering besprak de submissie van documenten op 10 maart, de betekenis van eisen die moeten worden aangevuld, een AI-geschreven bericht van de gemeente, en de reactie op voorgestelde wijzigingen door de stedenbouwer Ferry Adema. Richard meldde dat Richard Koek aangaf dat het oude plan niet werkt en dat wijzigingen nodig zijn.
+De vergadering ging over de reactie op wijzigingen in het liggende plan, het gebruik van een AI-geschreven gemeentebrief, en het proces van het verwerken van suggesties van de stedenbouwer Ferry Adema. Richard rapporteerde over gesprekken met Richard Koek en andere betrokkenen, terwijl Ron en Dennis de noodzaak van verificatie en kritisch kijken naar informatie benadrukten.
 
 ## Belangrijkste bespreekpunten
-- Submissie van documenten op 10 maart en betekenis van eisen.
-- AI-geschreven bericht van de gemeente.
-- Voorgestelde wijzigingen door Ferry Adema.
-- Reactie van Richard Koek op het oude plan.
-- Verwachtingen rond de voortgang van het plan.
+- Dennis meldde dat op 10 maart een aanvraag is ingediend en dat de eisen op dat moment moeten worden nageleefd, maar dat de gemeente het probleem "over de schutting gooit", waardoor bewijs moet worden geleverd dat de eisen niet nodig zijn.
+- Dennis vermeldde dat een bericht van de gemeente AI-geschreven was.
+- Ron benadrukte dat niet alles de waarheid is en dat er goed op gelet moet worden.
+- Richard rapporteerde dat er een overleg heeft plaatsgevonden met de stedenbouwer Ferry Adema, die behoorlijke wijzigingen voorstelde ten opzichte van het liggende plan.
+- Richard meldde dat bij Stadion en Gert-Jan weerstand was gekomen tegen de voorstellen van Ferry Adema.
+- Richard rapporteerde dat Gert-Jan zei dat "we dan niet kunnen" en dat het beter is om terug te keren naar de NVU-kaders.
+- Richard vermeldde dat hij bij Richard Koek heeft gecontroleerd, die bevestigde dat er een overleg met Ferry Adema heeft plaatsgevonden en dat het oude plan niet werkt.
+- Richard stelde dat het nog niet gebouwd is en dat de focus moet liggen op oplossingen.
 
 ## Besluiten
-Geen expliciete besluiten genoemd.
+Geen expliciete informatie genoemd.
 
 ## Uitspraken en conclusies
-- Dennis gaf aan dat op 10 maart documenten zijn ingediend en dat eisen moeten worden aangevuld.
-- Dennis merkte op dat de gemeente het bericht AI-geschreven heeft.
-- Ron gaf aan dat niet alles de waarheid is en dat er opgelet moet worden.
-- Richard meldde dat Richard Koek aangaf dat het oude plan niet werkt en dat het moet worden aangepast.
-- Richard gaf aan dat Ferry Adema aanzienlijke wijzigingen heeft voorgesteld, waarbij Stadion en Gert-Jan weerstand hebben getoond.
+- Dennis: "10 maart hadden we ingediend en op dat moment geldende eisen moeten ze aan toetsen."
+- Dennis: "Maar ze gooien het wel over de schutting, dus vervolgens moet ik gaan bewijzen dat het niet hoeft."
+- Dennis: "Dat berichtje van de gemeente was ook AI geschreven."
+- Ron: "Nou, dat weet ik niet."
+- Ron: "Ik had het idee van niet."
+- Ron: "Want het is niet allemaal de waarheid."
+- Ron: "Je moet er wel op letten."
+- Richard: "Ja, volgens mij wel." (antwoord op "Iedereen kent iedereen?")
+- Richard: "Wij hebben een overleg gehad met de stedenbouwer van dienst, Ferry Adema."
+- Richard: "Daaruit kwam enerzijds de gepresenteerde welstandspresentatie en ook de reflectie daarop."
+- Richard: "Hij heeft die bestanden ook met ons gedeeld."
+- Richard: "Daar kwamen een aantal behoorlijke wijzigingen die hij voorstelde."
+- Richard: "En zowel bij Stadion als bij Gert-Jan kwam daaruit ook wel wat weerstand."
+- Richard: "Gert-Jan zei dan kunnen we dan niet."
+- Richard: "Precies terug naar de NVU en dan binnen die kaders blijven."
+- Richard: "Voor nu een aantal weken geleden, twee weken, anderhalve week, is het goed om nu even daarop te reflecteren, maar vooral ook te kijken naar wat zijn de oplossingen."
+- Richard: "Vooraf, en dat heb ik wel met Ingeborg besproken, nog niet met Erwin en met Gert-Jan, heb ik ook even gecontroleerd bij Richard Koek."
+- Richard: "Er kwamen behoorlijke wijzigingen ten opzichte van het liggende plan uit voren."
+- Richard: "Ik heb tegen Ferry gezegd van doorgaan op het oude, dat gaat niet werken om deze en deze reden, die Ferry ook heeft aangegeven, dus het moet anders."
+- Richard: "Het is nog niet gebouwd, laten we nu kijken hoe het gewoon goed kan gaan."
 
 ## Voorgestelde acties
-Geen voorgestelde acties genoemd.
+Geen expliciete informatie genoemd.
 
 ## Bevestigde actiepunten
-Geen bevestigde actiepunten genoemd.
+| Actie | Verantwoordelijke | Deadline |
+|---|---|---|
+| Geen expliciete informatie genoemd. | | |
 
 ## Belangrijke data
-- Documenten ingediend op 10 maart.
-- Reflectie op zaken van twee weken geleden en anderhalve week geleden.
+- 10 maart: Datum van ingediende aanvraag.
+- Twee weken, anderhalve week: Tijdsperiode waarop gereflecteerd moet worden (E028).
+- Ferry Adema: Stedenbouwer van dienst.
+- Richard Koek: Persoon die de overleg met Ferry Adema bevestigde.
 
 ## Openstaande vragen
-Geen openstaande vragen genoemd.
+- Richard: "Hoe gaan we dit nou... Is dit weer een nieuwe mening?"
+- Richard: "Hoe gaan we zorgen dat dit er nu doorheen gaat lopen?"
 
 ## Aanvullende opmerkingen
-- Vlietpoort is genoemd als onderwerp.
-- Ferry Adema (stedenbouwer) heeft bestanden gedeeld.
-- Richard Koek heeft een bijeenkomst met Ferry Adema gehad.
-- Stadion en Gert-Jan hebben weerstand getoond tegen de voorgestelde wijzigingen.
+- Richard rapporteerde dat Richard Koek zei: "We hebben overleg gehad met Ferry" (E030).
+- Richard rapporteerde dat Richard Koek bevestigde dat Ferry Adema "daar ben ik geweest" (E032).
+- Ron’s uitspraak "Niet?" (E013), "Nee?" (E014) en "Ja?" (E015) zijn gerapporteerd als onderdeel van de discussie over of iedereen elkaar kent.
