@@ -12,7 +12,7 @@ import requests
 
 DEFAULT_MODEL = "mistral-meeting:16k"
 DEFAULT_OLLAMA_URL = "http://localhost:11434"
-DEFAULT_MAX_CHARS_PER_CHUNK = 24000
+DEFAULT_MAX_CHARS_PER_CHUNK = 12000
 
 EVIDENCE_SCHEMA = {
     "type": "object",
@@ -158,9 +158,11 @@ def call_ollama(
         "model": model,
         "stream": False,
         # Use Ollama structured output instead of generic JSON mode.
+    # Keep chunks and output bounded so the model cannot exhaust its 16k context
+    # while producing the evidence JSON.
         # Generic JSON mode only guarantees valid JSON, not the required schema.
         "format": EVIDENCE_SCHEMA,
-        "options": {"temperature": 0.1},
+        "options": {"temperature": 0.1, "num_predict": 6000},
         "messages": [
             {"role": "system", "content": system},
             {
