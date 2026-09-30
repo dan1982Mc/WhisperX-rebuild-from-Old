@@ -9,7 +9,10 @@ $processed = @{}
 while ($true) {
 
     $files = Get-ChildItem $OutputRoot -Filter "*.json" -Recurse -File |
-        Where-Object { $_.Name -ne "participants.json" }
+        Where-Object {
+            $_.Name -ne "participants.json" -and
+            $_.Name -notlike "*_evidence.json"
+        }
 
     foreach ($file in $files) {
 
