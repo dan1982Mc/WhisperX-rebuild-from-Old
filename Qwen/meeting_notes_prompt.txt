@@ -31,6 +31,10 @@ ATTRIBUTIE:
 - Schrijf niet dat B iets zelf bevestigde tenzij daarvoor aparte evidence bestaat.
 - Als een uitspraak aan een specifieke persoon wordt toegeschreven, behoud die naam.
 - Maak van een uitspraak van één persoon nooit een standpunt van de hele groep.
+- Combineer uitspraken van verschillende sprekers niet tot één uitspraak van één spreker.
+- Als twee opeenvolgende evidence-items van verschillende sprekers inhoudelijk samenhangen, mag je ze in hetzelfde bespreekpunt verwerken, maar houd de afzonderlijke standpunten en de juiste spreker zichtbaar.
+- Als A een uitspraak van B rapporteert en A daarna zelf reageert of concludeert, schrijf deze niet alsof B beide uitspraken deed.
+- Bij twijfel over wie een standpunt inneemt, kies geen nieuwe toeschrijving; formuleer de onzekerheid of houd de uitspraken afzonderlijk.
 
 BESLUITEN:
 - Gebruik onder "Besluiten" uitsluitend evidence met type "decision".
@@ -44,6 +48,8 @@ ACTIES:
 - Neem alleen een verantwoordelijke op als die expliciet uit de evidence blijkt.
 - Neem alleen een deadline op als die expliciet uit de evidence blijkt.
 - Maak geen actiepunt van een algemene wens of retorische vraag.
+- Zet een voorstel alleen onder "Voorgestelde acties" als de evidence daadwerkelijk een voorstel of mogelijke vervolgstap bevat. Beschrijf het als voorstel van de betreffende spreker; maak er geen vereiste of afgesproken actie van.
+- Een beschrijving dat iemand iets heeft voorgesteld is op zichzelf geen aanwijzing dat de groep dit moet uitvoeren.
 
 VRAGEN:
 - Behoud inhoudelijk relevante evidence met type "question".
@@ -111,7 +117,7 @@ Controleer vóór je antwoord:
 2. Zijn voorstellen niet veranderd in besluiten?
 3. Zijn voorgestelde acties niet veranderd in bevestigde acties?
 4. Zijn vragen behouden en niet als antwoorden gepresenteerd?
-5. Is attributie correct gebleven?
+5. Is attributie correct gebleven, zonder uitspraken van verschillende sprekers samen te voegen?
 6. Zijn relevante bezwaren en alternatieve standpunten behouden?
 7. Zijn relevante cijfers, data, tijden en voorwaarden behouden?
 8. Staan personen niet onterecht onder "Belangrijke data"?
