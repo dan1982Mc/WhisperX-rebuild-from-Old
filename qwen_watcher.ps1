@@ -301,15 +301,33 @@ while ($true) {
                 $meetingDate = (Get-Date).ToString("dd-MM-yyyy")
             }
 
-            & $Python $DocxScript `
-                --input-text $finalNotes `
-                --output $outputDocxFile `
-                --project "WhisperX" `
-                --meeting $meetingName `
-                --date $meetingDate
+            # Pass the meeting notes to Python through a temporary UTF-8 file.
+            # This avoids Windows PowerShell/native-command argument parsing issues
+            # with long multiline Markdown passed through --input-text.
+            $docxSourceFile = Join-Path $file.DirectoryName ($meetingName + "_docx_source.md")
 
-            if ($LASTEXITCODE -ne 0 -or -not (Test-Path $outputDocxFile)) {
-                throw "DOCX creation failed for $meetingName"
+            try {
+                [System.IO.File]::WriteAllText(
+                    $docxSourceFile,
+                    $finalNotes,
+                    [System.Text.UTF8Encoding]::new($false)
+                )
+
+                & $Python $DocxScript `
+                    --input $docxSourceFile `
+                    --output $outputDocxFile `
+                    --project "WhisperX" `
+                    --meeting $meetingName `
+                    --date $meetingDate
+
+                if ($LASTEXITCODE -ne 0 -or -not (Test-Path $outputDocxFile)) {
+                    throw "DOCX creation failed for $meetingName"
+                }
+            }
+            finally {
+                if (Test-Path $docxSourceFile) {
+                    Remove-Item $docxSourceFile -Force -ErrorAction SilentlyContinue
+                }
             }
 
             $processed[$file.FullName] = $true
