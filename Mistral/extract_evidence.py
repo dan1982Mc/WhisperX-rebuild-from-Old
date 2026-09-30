@@ -112,7 +112,7 @@ def load_participants(path: Path | None) -> dict[str, str]:
         raise RuntimeError(f"Participants moet een JSON object zijn: {path}")
     return {str(k): str(v) for k, v in data.items()}
 
-def call_ollama(model: str, ollama_url: str, participants: dict[str, str], transcript: str) -> dict[str, Any]:
+def call_ollama(model: str, ollama_url: str, participants: dict[str, str], transcript: str, raw_response_path: Path | None = None) -> dict[str, Any]:
     participant_text = "\n".join(f"{key} = {value}" for key, value in participants.items()) or "Geen namen beschikbaar."
     system = SYSTEM_PROMPT.replace("{{PARTICIPANTS}}", participant_text)
 
@@ -138,16 +138,30 @@ def call_ollama(model: str, ollama_url: str, participants: dict[str, str], trans
 
     try:
         content = response.json()["message"]["content"]
-        result = json.loads(content)
     except (KeyError, TypeError, json.JSONDecodeError) as exc:
-        raise RuntimeError("Ollama gaf geen geldig evidence JSON-resultaat terug.") from exc
+        raise RuntimeError("Ollama-response bevat geen geldig message.content veld.") from exc
+
+    if raw_response_path is not None:
+        raw_response_path.parent.mkdir(parents=True, exist_ok=True)
+        raw_response_path.write_text(content, encoding="utf-8")
+
+    try:
+        result = json.loads(content)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(
+            f"Ollama gaf geen geldig evidence JSON-resultaat terug. "
+            f"Ruwe response opgeslagen in: {raw_response_path}"
+        ) from exc
 
     if not isinstance(result, dict) or not isinstance(result.get("evidence"), list):
-        raise RuntimeError("Evidence-resultaat moet een object met een 'evidence' lijst zijn.")
+        raise RuntimeError(
+            "Evidence-resultaat moet een object met een 'evidence' lijst zijn. "
+            f"Ruwe response opgeslagen in: {raw_response_path}"
+        )
 
     return result
 
-def extract_evidence(transcript_path: Path, participants_path: Path | None, output_path: Path, model: str = DEFAULT_MODEL, ollama_url: str = DEFAULT_OLLAMA_URL) -> Path:
+def extract_evidence(transcript_path: Path, participants_path: Path | None, output_path: Path, model: str = DEFAULT_MODEL, ollama_url: str = DEFAULT_OLLAMA_URL, raw_response_path: Path | None = None) -> Path:
     transcript = transcript_path.read_text(encoding="utf-8-sig")
     participants = load_participants(participants_path)
 
@@ -155,7 +169,7 @@ def extract_evidence(transcript_path: Path, participants_path: Path | None, outp
     print(f"Evidence model   : {model}")
     print("Mistral evidence-extractie gestart...")
 
-    evidence = call_ollama(model, ollama_url, participants, transcript)
+    evidence = call_ollama(model, ollama_url, participants, transcript, raw_response_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(evidence, ensure_ascii=False, indent=2), encoding="utf-8")
 
