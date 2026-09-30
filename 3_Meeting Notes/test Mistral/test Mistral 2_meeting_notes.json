@@ -1,5 +1,5 @@
 {
-  "generated_date": "2026-09-30T16:31:33",
+  "generated_date": "2026-09-30T16:38:33",
   "model": "mistral-meeting:16k",
   "project_number": null,
   "project_name": null,
@@ -13,25 +13,32 @@
     "SPEAKER_03": "Richard"
   },
   "notes": {
-    "summary": "De vergadering behandelde de ingediende eisen van 10 maart en de reactie van de gemeente. Er was discussie over de waarheid van de informatie en de noodzaak om deze te controleren. Richard besprak een overleg met de stedenbouwer Ferry Adema en de wijzigingen die daaruit voortkwamen. Er was weerstand tegen deze wijzigingen van zowel Stadion als Gert-Jan. Richard stelde voor om te reflecteren op de oplossingen en om te kijken hoe het project goed kan worden afgerond.",
+    "summary": "De vergadering behandelde verschillende onderwerpen, waaronder de ingediende eisen van 10 maart, de betrouwbaarheid van informatie, en een overleg met de stedenbouwer Ferry Adema. Er was discussie over de wijzigingen die Ferry Adema voorstelde en de weerstand die daarbij ontstond. Gert-Jan werd verantwoordelijk gehouden voor het controleren van bepaalde zaken. Er werd ook gesproken over de noodzaak om oplossingen te vinden en te reflecteren op recente ontwikkelingen.",
     "key_discussion_points": [
       {
-        "topic": "Ingediende eisen en reactie gemeente",
-        "details": "Op 10 maart waren eisen ingediend die door de gemeente moeten worden getoetst. Dennis merkte op dat de gemeente informatie over de schutting gooit en dat hij dit moet bewijzen. Hij noemde ook dat het bericht van de gemeente AI-geschreven was. Ron was onzeker over de waarheid van de informatie en benadrukte dat Gert-Jan deze moet blijven controleren.",
+        "topic": "Ingediende eisen en bewijslast",
+        "details": "Dennis sprak over de ingediende eisen van 10 maart en de bewijslast die hij moet dragen. Hij merkte op dat de gemeente een AI-geschreven bericht had verzonden.",
         "timestamps": [
           "00:00:00",
           "00:00:05",
-          "00:00:08",
+          "00:00:08"
+        ]
+      },
+      {
+        "topic": "Betrouwbaarheid van informatie",
+        "details": "Ron en Gert-Jan spraken over de betrouwbaarheid van de informatie en de noodzaak om deze te controleren. Ron merkte op dat niet alle informatie waar is en dat men erop moet letten.",
+        "timestamps": [
           "00:00:13",
           "00:00:16",
           "00:00:21",
           "00:00:24",
-          "00:00:26"
+          "00:00:26",
+          "00:00:29"
         ]
       },
       {
-        "topic": "Overleg met stedenbouwer Ferry Adema",
-        "details": "Richard besprak een overleg met de stedenbouwer Ferry Adema. Hieruit kwamen een welstandspresentatie en reflectie, evenals een aantal wijzigingen die Ferry voorstelde. Er was weerstand tegen deze wijzigingen van zowel Stadion als Gert-Jan. Richard stelde vragen over hoe deze nieuwe mening doorgevoerd kan worden en hoe ervoor gezorgd kan worden dat het project goed afgerond wordt.",
+        "topic": "Overleg met Ferry Adema",
+        "details": "Richard besprak een overleg met de stedenbouwer Ferry Adema. Hieruit kwamen een welstandspresentatie en reflectie, evenals een aantal wijzigingen die Ferry Adema voorstelde. Er was weerstand tegen deze wijzigingen bij Stadion en Gert-Jan.",
         "timestamps": [
           "00:00:34",
           "00:00:47",
@@ -56,6 +63,13 @@
     "decisions": [],
     "statements_and_conclusions": [
       {
+        "statement": "Gert-Jan moet het blijven controleren.",
+        "speaker": "Gert-Jan",
+        "timestamps": [
+          "00:00:21"
+        ]
+      },
+      {
         "statement": "Het is nog niet gebouwd, laten we nu kijken hoe het gewoon goed kan gaan.",
         "speaker": "Richard",
         "timestamps": [
@@ -65,8 +79,28 @@
     ],
     "proposed_actions": [],
     "confirmed_action_items": [],
-    "important_dates": [],
+    "important_dates": [
+      {
+        "date": "10 maart",
+        "description": "Datum waarop de eisen zijn ingediend.",
+        "timestamps": [
+          "00:00:00"
+        ]
+      }
+    ],
     "open_questions": [
+      {
+        "question": "Kennen iedereen elkaar?",
+        "timestamps": [
+          "00:00:33"
+        ]
+      },
+      {
+        "question": "Zal ik hem even aftrappen?",
+        "timestamps": [
+          "00:00:43"
+        ]
+      },
       {
         "question": "Is dit weer een nieuwe mening?",
         "timestamps": [
@@ -81,9 +115,8 @@
       }
     ],
     "additional_notes": [
-      "Ron noemde Vlietpoort.",
-      "Richard vroeg of iedereen elkaar kent.",
-      "Richard vroeg of hij een persoon even mag aftrappen."
+      "Richard sprak over een overleg met Ferry Adema en de wijzigingen die daaruit voortkwamen.",
+      "Er was weerstand tegen de voorgestelde wijzigingen bij Stadion en Gert-Jan."
     ]
   }
 }
