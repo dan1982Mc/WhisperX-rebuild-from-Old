@@ -66,7 +66,6 @@ while ($true) {
 
             if ($LASTEXITCODE -eq 0) {
 
-                Move-Item $ProcessingFile $ProcessingDir -Force
 
                 Add-Content $LogFile "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') SUCCESS $($file.Name)"
 
