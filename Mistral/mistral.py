@@ -67,14 +67,14 @@ Gebruik exact deze structuur:
     {"topic": "string", "details": "string", "timestamps": ["00:00:00"]}
   ],
   "decisions": [
-    {"decision": "string", "timestamp": "string", "timestamps": ["00:00:00"]}
+    {"decision": "string", "timestamps": ["00:00:00"]}
   ],
   "statements_and_conclusions": [
-    {"statement": "string", "speaker": "string", "timestamp": "string", "timestamps": ["00:00:00"]}
+    {"statement": "string", "speaker": "string", "timestamps": ["00:00:00"]}
   ],
   "proposed_actions": [
     {"action": "string", "responsible": "string", "deadline": "string",
-     "timestamp": "string", "timestamps": ["00:00:00"]}
+     "timestamps": ["00:00:00"]}
   ],
   "confirmed_action_items": [
     {"action": "string", "responsible": "string", "deadline": "string",
@@ -180,13 +180,19 @@ def as_list(value: Any) -> list[Any]:
     return value if isinstance(value, list) else []
 
 
+def render_timestamps(item: dict[str, Any]) -> str:
+    timestamps = item.get("timestamps", [])
+    if not isinstance(timestamps, list):
+        timestamps = [timestamps] if timestamps else []
+    timestamps = [str(ts) for ts in timestamps if ts]
+    return f" — Bron: {', '.join(timestamps)}" if timestamps else ""
+
 def render_markdown(
     notes: dict[str, Any],
     metadata: dict[str, Any],
     participants: dict[str, str],
 ) -> str:
     lines = ["# Vergaderingsnotitie", ""]
-
     for label, key in [
         ("Projectnummer", "project_number"),
         ("Project", "project_name"),
@@ -199,23 +205,18 @@ def render_markdown(
         lines.append("")
 
     lines += ["## Deelnemers"]
-    if participants:
-        lines += [f"- {name}" for name in participants.values()]
-    else:
-        lines.append("- Niet beschikbaar")
+    named = [name for name in participants.values() if name]
+    lines += [f"- {name}" for name in named] if named else ["- Nog niet ingevuld"]
     lines.append("")
 
     lines += ["## Samenvatting", str(notes.get("summary") or "Niet beschikbaar"), ""]
-
     lines += ["## Belangrijkste bespreekpunten"]
     points = as_list(notes.get("key_discussion_points"))
     if points:
         for item in points:
             if isinstance(item, dict):
                 lines += [f"### {item.get('topic', 'Onderwerp')}",
-                          str(item.get("details", "")), ""]
-            else:
-                lines.append(f"- {item}")
+                          str(item.get("details", "")) + render_timestamps(item), ""]
     else:
         lines.append("- Geen expliciete bespreekpunten vastgesteld.")
     lines.append("")
@@ -224,9 +225,8 @@ def render_markdown(
     decisions = as_list(notes.get("decisions"))
     if decisions:
         for item in decisions:
-            text = item.get("decision", "") if isinstance(item, dict) else str(item)
-            timestamp = item.get("timestamp", "") if isinstance(item, dict) else ""
-            lines.append(f"- {text}" + (f" ({timestamp})" if timestamp else ""))
+            if isinstance(item, dict):
+                lines.append(f"- {item.get('decision', '')}{render_timestamps(item)}")
     else:
         lines.append("- Geen expliciete besluiten vastgesteld.")
     lines.append("")
@@ -237,13 +237,8 @@ def render_markdown(
         for item in statements:
             if isinstance(item, dict):
                 speaker = item.get("speaker", "")
-                statement = item.get("statement", "")
-                timestamp = item.get("timestamp", "")
                 prefix = f"**{speaker}:** " if speaker else ""
-                suffix = f" ({timestamp})" if timestamp else ""
-                lines.append(f"- {prefix}{statement}{suffix}")
-            else:
-                lines.append(f"- {item}")
+                lines.append(f"- {prefix}{item.get('statement', '')}{render_timestamps(item)}")
     else:
         lines.append("- Geen aanvullende uitspraken of conclusies.")
     lines.append("")
@@ -257,9 +252,8 @@ def render_markdown(
                     f"- {item.get('action', '')} — "
                     f"Verantwoordelijke: {item.get('responsible', 'Niet genoemd')} — "
                     f"Deadline: {item.get('deadline', 'Niet genoemd')}"
+                    f"{render_timestamps(item)}"
                 )
-            else:
-                lines.append(f"- {item}")
     else:
         lines.append("- Geen voorgestelde acties.")
     lines.append("")
@@ -267,18 +261,14 @@ def render_markdown(
     lines += ["## Bevestigde actiepunten"]
     confirmed = as_list(notes.get("confirmed_action_items"))
     if confirmed:
-        lines += [
-            "| Actie | Verantwoordelijke | Deadline |",
-            "|---|---|---|",
-        ]
+        lines += ["| Actie | Verantwoordelijke | Deadline | Bron |", "|---|---|---|---|"]
         for item in confirmed:
             if isinstance(item, dict):
                 action = str(item.get("action", "")).replace("|", "\\|")
                 responsible = str(item.get("responsible", "Niet genoemd")).replace("|", "\\|")
                 deadline = str(item.get("deadline", "Niet genoemd")).replace("|", "\\|")
-                lines.append(f"| {action} | {responsible} | {deadline} |")
-            else:
-                lines.append(f"| {item} | Niet genoemd | Niet genoemd |")
+                source = ", ".join(str(x) for x in item.get("timestamps", []) if x)
+                lines.append(f"| {action} | {responsible} | {deadline} | {source} |")
     else:
         lines.append("- Geen bevestigde actiepunten.")
     lines.append("")
@@ -288,9 +278,7 @@ def render_markdown(
     if dates:
         for item in dates:
             if isinstance(item, dict):
-                lines.append(f"- **{item.get('date', '')}:** {item.get('description', '')}")
-            else:
-                lines.append(f"- {item}")
+                lines.append(f"- **{item.get('date', '')}:** {item.get('description', '')}{render_timestamps(item)}")
     else:
         lines.append("- Geen belangrijke data vastgesteld.")
     lines.append("")
@@ -299,19 +287,16 @@ def render_markdown(
     questions = as_list(notes.get("open_questions"))
     if questions:
         for item in questions:
-            lines.append(f"- {item.get('question', '') if isinstance(item, dict) else item}")
+            if isinstance(item, dict):
+                lines.append(f"- {item.get('question', '')}{render_timestamps(item)}")
     else:
         lines.append("- Geen openstaande vragen vastgesteld.")
     lines.append("")
 
     lines += ["## Aanvullende opmerkingen"]
     additional = as_list(notes.get("additional_notes"))
-    if additional:
-        lines += [f"- {item}" for item in additional]
-    else:
-        lines.append("- Geen aanvullende opmerkingen.")
+    lines += [f"- {item}" for item in additional] if additional else ["- Geen aanvullende opmerkingen."]
     lines.append("")
-
     return "\n".join(lines)
 
 
