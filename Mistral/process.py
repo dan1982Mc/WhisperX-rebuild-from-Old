@@ -1,143 +1,71 @@
 #!/usr/bin/env python3
-"""Run the Mistral stages on prepared WhisperX transcripts."""
+"""Unattended hierarchical Mistral meeting pipeline."""
 from __future__ import annotations
-import argparse, json, logging, sys, time
+import argparse,json,logging,sys,time
 from pathlib import Path
 from extract_evidence import extract_evidence
-from mistral import generate_notes, load_evidence, load_json, safe_filename
+from synthesize_notes import synthesize
+from mistral import load_evidence,load_json,safe_filename
 
-DEFAULT_WATCH_DIR = Path("2_Processing")
-DEFAULT_OUTPUT_DIR = Path("3_Meeting Notes")
-
-def setup_logging(log_dir: Path) -> logging.Logger:
-    log_dir.mkdir(parents=True, exist_ok=True)
-    logger = logging.getLogger("mistral-pipeline")
-    logger.setLevel(logging.INFO)
-    logger.handlers.clear()
-    fmt = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s", "%Y-%m-%d %H:%M:%S")
-    for handler in (logging.StreamHandler(sys.stdout), logging.FileHandler(log_dir / "mistral_watcher.log", encoding="utf-8")):
-        handler.setFormatter(fmt); logger.addHandler(handler)
+DEFAULT_WATCH_DIR=Path("2_Processing"); DEFAULT_OUTPUT_DIR=Path("3_Meeting Notes")
+def setup_logging(d):
+    d.mkdir(parents=True,exist_ok=True); logger=logging.getLogger("mistral-pipeline"); logger.setLevel(logging.INFO); logger.handlers.clear()
+    fmt=logging.Formatter("%(asctime)s | %(levelname)s | %(message)s","%Y-%m-%d %H:%M:%S")
+    for h in (logging.StreamHandler(sys.stdout),logging.FileHandler(d/"mistral_watcher.log",encoding="utf-8")):h.setFormatter(fmt);logger.addHandler(h)
     return logger
-
-def find_transcripts(root: Path):
-    return sorted(p for p in root.rglob("*_for_mistral.md") if p.is_file()) if root.exists() else []
-
-def stable(path: Path, delay: float) -> bool:
-    if not path.exists(): return False
-    a = path.stat(); time.sleep(delay)
-    if not path.exists(): return False
-    b = path.stat()
-    return a.st_size == b.st_size and a.st_mtime_ns == b.st_mtime_ns
-
-def validate_notes(notes_path: Path, evidence_path: Path, participants_path: Path) -> None:
-    notes_data = load_json(notes_path)
-    notes = notes_data.get("notes") if isinstance(notes_data, dict) else notes_data
-    if not isinstance(notes, dict):
-        raise RuntimeError("Meeting notes JSON bevat geen geldig 'notes' object.")
-
-    evidence = load_evidence(evidence_path)
-    valid_timestamps = {str(item.get("timestamp")) for item in evidence if item.get("timestamp")}
-
-    participants_data = load_json(participants_path)
-    participants = participants_data.get("participants", participants_data)
-    valid_names = {str(v) for v in participants.values() if str(v).strip()} if isinstance(participants, dict) else set()
-
-    fields = (
-        "key_discussion_points", "decisions", "statements_and_conclusions",
-        "proposed_actions", "confirmed_action_items", "important_dates", "open_questions"
-    )
+def find_transcripts(root):return sorted(p for p in root.rglob("*_for_mistral.md") if p.is_file()) if root.exists() else []
+def stable(p,delay):
+    if not p.exists():return False
+    a=p.stat();time.sleep(delay)
+    if not p.exists():return False
+    b=p.stat();return a.st_size==b.st_size and a.st_mtime_ns==b.st_mtime_ns
+def validate_notes(path,evidence_path,participants_path):
+    data=load_json(path);notes=data.get("notes") if isinstance(data,dict) else None
+    if not isinstance(notes,dict):raise RuntimeError("Meeting notes JSON bevat geen notes-object.")
+    evidence=load_evidence(evidence_path);valid_ts={str(x.get("timestamp")) for x in evidence if x.get("timestamp")}
+    participants=load_json(participants_path).get("participants",{})
+    fields=("key_discussion_points","decisions","statements_and_conclusions","proposed_actions","confirmed_action_items","important_dates","open_questions")
     for field in fields:
-        items = notes.get(field, [])
-        if not isinstance(items, list):
-            raise RuntimeError(f"Notes veld '{field}' moet een lijst zijn.")
-        for item in items:
-            if not isinstance(item, dict):
-                continue
-            timestamps = item.get("timestamps")
-            if not isinstance(timestamps, list) or not timestamps:
-                raise RuntimeError(f"Item in '{field}' mist transcript-timestamps.")
-            unknown = [str(ts) for ts in timestamps if str(ts) not in valid_timestamps]
-            if unknown:
-                raise RuntimeError(f"Item in '{field}' bevat onbekende timestamp(s): {unknown}")
-            speaker = item.get("speaker")
-            if speaker and speaker not in participants and speaker not in valid_names:
-                raise RuntimeError(f"Onbekende spreker in '{field}': {speaker}")
-
-def process_one(transcript: Path, output_dir: Path, model: str, ollama_url: str, logger: logging.Logger) -> bool:
-    participants = transcript.parent / "participants.json"
-    if not participants.exists():
-        logger.warning("Waiting for participants.json: %s", transcript.parent)
-        return False
-    evidence = transcript.parent / f"{transcript.stem.replace('_for_mistral','')}_evidence.json"
-    base = safe_filename(transcript.stem.replace("_for_mistral",""))
-    if all((output_dir / f"{base}_meeting_notes{ext}").exists() for ext in (".json",".md",".docx")):
-        logger.info("Already completed: %s", transcript.name); return True
+        for item in notes.get(field,[]):
+            if not isinstance(item,dict):continue
+            ts=item.get("timestamps");ts=ts if isinstance(ts,list) else ([ts] if ts else [])
+            if not ts:raise RuntimeError(f"Item in '{field}' mist timestamps.")
+            if any(str(x) not in valid_ts for x in ts):raise RuntimeError(f"Item in '{field}' bevat onbekende timestamp.")
+            speaker=item.get("speaker")
+            if speaker and speaker not in participants.values():raise RuntimeError(f"Onbekende spreker: {speaker}")
+def process_one(t,out,model,url,logger):
+    participants=t.parent/"participants.json"
+    if not participants.exists():logger.warning("Waiting for participants.json: %s",t.parent);return False
+    base=safe_filename(t.stem.replace("_for_mistral",""));evidence=t.parent/f"{base}_evidence.json"
+    if all((out/f"{base}_meeting_notes{e}").exists() for e in (".json",".md",".docx")):return True
     try:
         if not evidence.exists():
-            logger.info("Stage 1/2: extracting evidence: %s", transcript.name)
-            failed = output_dir / "failed"
-            raw_response = failed / f"{base}_evidence_raw.txt"
-            extract_evidence(
-                transcript,
-                participants,
-                evidence,
-                model,
-                ollama_url,
-                raw_response_path=raw_response
-            )
-        else:
-            logger.info("Using existing evidence: %s", evidence)
-        logger.info("Stage 2/2: generating meeting notes: %s", transcript.name)
-        metadata = transcript.parent / "metadata.json"
-        json_path, _, _ = generate_notes(
-            evidence, participants, metadata if metadata.exists() else None,
-            output_dir, model, ollama_url, save_raw_response=True
-        )
-        logger.info("Validating meeting notes: %s", json_path.name)
-        validate_notes(json_path, evidence, participants)
-        logger.info("Validation passed: %s", transcript.name)
-        logger.info("Completed: %s", transcript.name)
-        return True
+            logger.info("Stage 1/3: extracting source-linked evidence")
+            extract_evidence(t,participants,evidence,model,url,segments_per_batch=80,raw_response_dir=out/"failed")
+        logger.info("Stage 2/3: synthesizing temporal discussion blocks")
+        logger.info("Stage 3/3: generating final meeting notes")
+        metadata=t.parent/"metadata.json"
+        jp,_,_=synthesize(evidence,participants,metadata if metadata.exists() else None,out,model,url,evidence_per_block=120)
+        validate_notes(jp,evidence,participants);logger.info("Completed: %s",t.name);return True
     except Exception as exc:
-        failed = output_dir / "failed"; failed.mkdir(parents=True, exist_ok=True)
-        (failed / f"{base}.error.json").write_text(json.dumps({
-            "transcript": str(transcript), "error": str(exc),
-            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S")
-        }, ensure_ascii=False, indent=2), encoding="utf-8")
-        logger.exception("Processing failed: %s", transcript)
-        return False
-
-def main() -> int:
-    p=argparse.ArgumentParser()
-    p.add_argument("--watch-dir", type=Path, default=DEFAULT_WATCH_DIR)
-    p.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
-    p.add_argument("--poll-seconds", type=float, default=5)
-    p.add_argument("--stable-delay", type=float, default=3)
-    p.add_argument("--model", default="mistral-meeting:16k")
-    p.add_argument("--ollama-url", default="http://localhost:11434")
-    a=p.parse_args()
-    a.watch_dir.mkdir(parents=True, exist_ok=True); a.output_dir.mkdir(parents=True, exist_ok=True)
-    log=setup_logging(a.output_dir/"logs")
-    log.info("Mistral pipeline watcher started.")
-    log.info("Watch directory: %s", a.watch_dir.resolve())
-    log.info("Output directory: %s", a.output_dir.resolve())
-    log.info("Model: %s", a.model)
-    processed=set(); failed_signatures={}
+        failed=out/"failed";failed.mkdir(parents=True,exist_ok=True)
+        (failed/f"{base}.error.json").write_text(json.dumps({"transcript":str(t),"error":str(exc),"timestamp":time.strftime("%Y-%m-%dT%H:%M:%S")},ensure_ascii=False,indent=2),encoding="utf-8")
+        logger.exception("Processing failed: %s",t);return False
+def main():
+    p=argparse.ArgumentParser();p.add_argument("--watch-dir",type=Path,default=DEFAULT_WATCH_DIR);p.add_argument("--output-dir",type=Path,default=DEFAULT_OUTPUT_DIR);p.add_argument("--poll-seconds",type=float,default=5);p.add_argument("--stable-delay",type=float,default=3);p.add_argument("--model",default="mistral-meeting:16k");p.add_argument("--ollama-url",default="http://localhost:11434");a=p.parse_args()
+    a.watch_dir.mkdir(parents=True,exist_ok=True);a.output_dir.mkdir(parents=True,exist_ok=True);log=setup_logging(a.output_dir/"logs");log.info("Mistral hierarchical watcher started.")
+    processed=set();failed_signatures={}
     while True:
         try:
             for t in find_transcripts(a.watch_dir):
                 t=t.resolve()
-                if t in processed or not stable(t,a.stable_delay): continue
+                if t in processed or not stable(t,a.stable_delay):continue
                 sig=(t.stat().st_size,t.stat().st_mtime_ns)
-                if failed_signatures.get(t)==sig: continue
+                if failed_signatures.get(t)==sig:continue
                 ok=process_one(t,a.output_dir,a.model,a.ollama_url,log)
-                if ok: processed.add(t)
-                else: failed_signatures[t]=sig
+                if ok:processed.add(t)
+                else:failed_signatures[t]=sig
             time.sleep(a.poll_seconds)
-        except KeyboardInterrupt:
-            log.info("Mistral pipeline watcher stopped."); return 0
-        except Exception:
-            log.exception("Watcher error; continuing."); time.sleep(a.poll_seconds)
-
-if __name__=="__main__":
-    raise SystemExit(main())
+        except KeyboardInterrupt:log.info("Watcher stopped.");return 0
+        except Exception:log.exception("Watcher error; continuing.");time.sleep(a.poll_seconds)
+if __name__=="__main__":raise SystemExit(main())
