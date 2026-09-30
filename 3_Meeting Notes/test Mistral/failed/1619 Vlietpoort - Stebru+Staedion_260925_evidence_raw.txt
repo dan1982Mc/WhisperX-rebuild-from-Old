@@ -1,0 +1,1 @@
+{ "participants": ["SPEAKER_00", "SPEAKER_01", "SPEAKER_02", "SPEAKER_03", "SPEAKER_04"] }
