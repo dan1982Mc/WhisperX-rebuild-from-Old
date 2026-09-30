@@ -19,15 +19,26 @@ while ($true) {
 
         try {
             $before = $file.Length
-            Start-Sleep -Milliseconds 500
+            Start-Sleep -Seconds 2
             $after = (Get-Item $file.FullName).Length
             if ($before -ne $after) { continue }
 
-            Write-Host "Preparing: $($file.Name)"
             $json = Get-Content $file.FullName -Raw | ConvertFrom-Json
-            if (-not $json.segments) { throw "No transcript segments found in $($file.Name)" }
+            if (-not $json.segments) { continue }
 
             $outputDirectory = $file.DirectoryName
+            $outputFile = Join-Path $outputDirectory ($file.BaseName + "_for_mistral.md")
+
+            if (Test-Path $outputFile) {
+                $processed[$file.FullName] = $true
+                continue
+            }
+
+            $participantsFile = Join-Path $outputDirectory "participants.json"
+            if (-not (Test-Path $participantsFile)) {
+                Write-Host "Waiting for participants.json: $participantsFile" -ForegroundColor Yellow
+                continue
+            }
 
             $speakers = @(
                 $json.segments |
@@ -35,20 +46,6 @@ while ($true) {
                 Select-Object -ExpandProperty speaker -Unique |
                 Sort-Object
             )
-
-            $participantsFile = Join-Path $outputDirectory "participants.json"
-            if (-not (Test-Path $participantsFile)) {
-                $participants = [ordered]@{}
-                foreach ($speaker in $speakers) { $participants[$speaker] = "" }
-                $participants | ConvertTo-Json | Set-Content -Path $participantsFile -Encoding UTF8
-                Write-Host "Created participant mapping: $participantsFile" -ForegroundColor Yellow
-            }
-
-            $outputFile = Join-Path $outputDirectory ($file.BaseName + "_for_mistral.md")
-            if (Test-Path $outputFile) {
-                $processed[$file.FullName] = $true
-                continue
-            }
 
             $lines = New-Object System.Collections.Generic.List[string]
             $lines.Add("# Meeting transcript")
@@ -58,9 +55,7 @@ while ($true) {
             $lines.Add("")
             $lines.Add("## Participants")
             $lines.Add("")
-
             foreach ($speaker in $speakers) { $lines.Add("- $speaker") }
-
             $lines.Add("")
             $lines.Add("## Transcript")
             $lines.Add("")
@@ -94,7 +89,6 @@ while ($true) {
 
             $lines | Set-Content -Path $outputFile -Encoding UTF8
             $processed[$file.FullName] = $true
-
             Write-Host "Created: $outputFile" -ForegroundColor Green
         }
         catch {
