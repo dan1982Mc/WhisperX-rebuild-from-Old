@@ -34,13 +34,12 @@ while ($true) {
             }
 
             $outputBase = Join-Path $MeetingNotesRoot ($file.BaseName -replace "_for_qwen$","_meeting_notes")
-            $outputFile = "$outputBase.txt"
             $outputJsonFile = "$outputBase.json"
             $outputDocxFile = "$outputBase.docx"
             $evidenceFile = Join-Path $file.DirectoryName ($file.BaseName -replace "_for_qwen$","_evidence.json")
 
             # Completed meetings must not be processed again after watcher restart.
-            if ((Test-Path $outputFile) -and (Test-Path $outputJsonFile) -and (Test-Path $outputDocxFile)) {
+            if ((Test-Path $outputJsonFile) -and (Test-Path $outputDocxFile)) {
                 Write-Host "Already completed: $($file.Name)" -ForegroundColor DarkGray
                 $processed[$file.FullName] = $true
                 continue
@@ -197,56 +196,39 @@ while ($true) {
             $prompt = $prompt.Replace("{{PARTICIPANTS}}", $participantText)
             $prompt = $prompt.Replace("{{EVIDENCE}}", $evidenceJson)
 
-            if (Test-Path $outputFile) {
-                Write-Host "Existing meeting notes found: $outputFile" -ForegroundColor DarkGray
-                $finalNotes = Get-Content $outputFile -Raw
+            Write-Host "Stage 2: generating meeting notes..."
+
+            $body = @{
+                model = $Model
+                prompt = $prompt
+                stream = $false
+                keep_alive = "10m"
+                options = @{
+                    num_ctx = 16384
+                }
+            } | ConvertTo-Json -Depth 10
+
+            try {
+                $bodyBytes = [System.Text.Encoding]::UTF8.GetBytes($body)
+                $response = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json; charset=utf-8" -Body $bodyBytes
             }
-            else {
-                Write-Host "Stage 2: generating meeting notes..."
-                # -------------------------------------------------
-                # Call Ollama
-                # -------------------------------------------------
-
-                $body = @{
-                    model = $Model
-                    prompt = $prompt
-                    stream = $false
-                    keep_alive = "10m"
-                    options = @{
-                        num_ctx = 16384
-                    }
-                } |
-                ConvertTo-Json -Depth 10
-
-                try {
-                    $bodyBytes = [System.Text.Encoding]::UTF8.GetBytes($body)
-                    $response = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json; charset=utf-8" -Body $bodyBytes
+            catch {
+                $serverError = $_.ErrorDetails.Message
+                if ([string]::IsNullOrWhiteSpace($serverError)) {
+                    $serverError = $_.Exception.Message
                 }
-                catch {
-                    $serverError = $_.ErrorDetails.Message
-                    if ([string]::IsNullOrWhiteSpace($serverError)) {
-                        $serverError = $_.Exception.Message
-                    }
-                    throw "Ollama Stage 2 error: $serverError"
-                }
+                throw "Ollama Stage 2 error: $serverError"
+            }
 
-                # -------------------------------------------------
-                # Save final Qwen response
-                # -------------------------------------------------
-
-                New-Item -ItemType Directory -Force $MeetingNotesRoot | Out-Null
-
-                $response.response |
-                    Set-Content `
-                        -Path $outputFile `
-                        -Encoding UTF8
-
-                $finalNotes = $response.response
+            $finalNotes = $response.response
+            if ([string]::IsNullOrWhiteSpace($finalNotes)) {
+                throw "Stage 2 returned empty meeting notes."
             }
 
             # -------------------------------------------------
             # Save machine-readable meeting notes JSON
             # -------------------------------------------------
+
 
             $meetingName = $file.BaseName -replace "_for_qwen$",""
             $jsonSections = [ordered]@{}
@@ -277,7 +259,6 @@ while ($true) {
             $notesJson = [ordered]@{
                 meeting = $meetingName
                 generated_at = (Get-Date).ToString("o")
-                source_markdown = [System.IO.Path]::GetFileName($outputFile)
                 sections = $jsonSections
             }
 
@@ -286,7 +267,7 @@ while ($true) {
                 Set-Content -Path $outputJsonFile -Encoding UTF8
 
             # -------------------------------------------------
-            # Create formatted DOCX from the final meeting notes
+            # Create formatted DOCX from the generated meeting notes
             # -------------------------------------------------
 
             $audioFile = Get-ChildItem $file.DirectoryName -File |
@@ -301,7 +282,7 @@ while ($true) {
             }
 
             & $Python $DocxScript `
-                --input $outputFile `
+                --input $file.FullName `
                 --output $outputDocxFile `
                 --project "WhisperX" `
                 --meeting $meetingName `
@@ -313,7 +294,6 @@ while ($true) {
 
             $processed[$file.FullName] = $true
 
-            Write-Host "Created: $outputFile" -ForegroundColor Green
             Write-Host "Created: $outputJsonFile" -ForegroundColor Green
             Write-Host "Created: $outputDocxFile" -ForegroundColor Green
 
