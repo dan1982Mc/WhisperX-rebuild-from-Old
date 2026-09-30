@@ -1,0 +1,5 @@
+{
+  "transcript": "E:\\AAA\\WhisperX\\2_Processing\\test\\test_for_mistral.md",
+  "error": "Ongeldige JSON in E:\\AAA\\WhisperX\\2_Processing\\test\\participants.json: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)",
+  "timestamp": "2026-09-30T15:35:33"
+}

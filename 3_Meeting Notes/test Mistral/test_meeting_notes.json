@@ -1,0 +1,124 @@
+{
+  "generated_date": "2026-09-30T15:41:38",
+  "model": "mistral-meeting:16k",
+  "project_number": null,
+  "project_name": null,
+  "meeting_details": null,
+  "filename_base": "test",
+  "processed_date": null,
+  "participants": {
+    "SPEAKER_00": "Gert-Jan",
+    "SPEAKER_01": "Dennis",
+    "SPEAKER_02": "Ron",
+    "SPEAKER_03": "Richard"
+  },
+  "notes": {
+    "summary": "De vergadering besprak de status van een project en de wijzigingen die zijn voorgesteld door de stedenbouwer Ferry Adema. Er was weerstand tegen deze wijzigingen en er werd gezocht naar oplossingen.",
+    "key_discussion_points": [
+      {
+        "topic": "Ingediende eisen",
+        "details": "Op 10 maart waren eisen ingediend en deze moeten aan de geldende eisen worden getoetst.",
+        "evidence_ids": [
+          "E001"
+        ]
+      },
+      {
+        "topic": "AI-geschreven bericht",
+        "details": "Het bericht van de gemeente was AI-geschreven.",
+        "evidence_ids": [
+          "E003"
+        ]
+      },
+      {
+        "topic": "Wijzigingen in het plan",
+        "details": "Er zijn behoorlijke wijzigingen voorgesteld ten opzichte van het liggende plan.",
+        "evidence_ids": [
+          "E021",
+          "E030"
+        ]
+      },
+      {
+        "topic": "Weerstand tegen wijzigingen",
+        "details": "Er is weerstand tegen de voorgestelde wijzigingen bij Stadion en Gert-Jan.",
+        "evidence_ids": [
+          "E022"
+        ]
+      },
+      {
+        "topic": "Oplossingen zoeken",
+        "details": "Er werd gezocht naar oplossingen voor de problemen en het is nog niet gebouwd, dus er is ruimte voor aanpassingen.",
+        "evidence_ids": [
+          "E027",
+          "E033"
+        ]
+      }
+    ],
+    "decisions": [],
+    "statements_and_conclusions": [
+      {
+        "statement": "Het bericht van de gemeente was AI-geschreven.",
+        "speaker": "Dennis",
+        "timestamp": "00:00:08",
+        "evidence_ids": [
+          "E003"
+        ]
+      },
+      {
+        "statement": "Er is weerstand tegen de voorgestelde wijzigingen bij Stadion en Gert-Jan.",
+        "speaker": "Richard",
+        "timestamp": "00:01:26",
+        "evidence_ids": [
+          "E022"
+        ]
+      },
+      {
+        "statement": "Het is nog niet gebouwd, dus er is ruimte voor aanpassingen.",
+        "speaker": "Richard",
+        "timestamp": "00:02:56",
+        "evidence_ids": [
+          "E033"
+        ]
+      }
+    ],
+    "proposed_actions": [
+      {
+        "action": "Gert-Jan moet het blijven controleren.",
+        "responsible": "Gert-Jan",
+        "deadline": "Niet genoemd",
+        "timestamp": "00:00:21",
+        "evidence_ids": [
+          "E006"
+        ]
+      },
+      {
+        "action": "Reflecteren op de wijzigingen en oplossingen zoeken.",
+        "responsible": "Niet genoemd",
+        "deadline": "Niet genoemd",
+        "timestamp": "00:02:00",
+        "evidence_ids": [
+          "E027"
+        ]
+      }
+    ],
+    "confirmed_action_items": [],
+    "important_dates": [],
+    "open_questions": [
+      {
+        "question": "Is dit weer een nieuwe mening?",
+        "evidence_ids": [
+          "E023"
+        ]
+      },
+      {
+        "question": "Hoe gaan we zorgen dat dit er nu doorheen gaat lopen?",
+        "evidence_ids": [
+          "E024"
+        ]
+      }
+    ],
+    "additional_notes": [
+      "Er was een overleg met de stedenbouwer Ferry Adema over de welstandspresentatie en de reflectie daarop.",
+      "De bestanden van de welstandspresentatie zijn gedeeld met de deelnemers."
+    ]
+  }
+}

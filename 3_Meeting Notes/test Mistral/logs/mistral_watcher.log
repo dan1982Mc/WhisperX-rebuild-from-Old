@@ -1,0 +1,37 @@
+2026-09-30 15:32:28 | INFO | Mistral pipeline watcher started.
+2026-09-30 15:32:28 | INFO | Watch directory: E:\AAA\WhisperX\2_Processing
+2026-09-30 15:32:28 | INFO | Output directory: E:\AAA\WhisperX\3_Meeting Notes
+2026-09-30 15:32:28 | INFO | Model: mistral-meeting:16k
+2026-09-30 15:32:31 | INFO | Stage 1/2: extracting evidence: test_for_mistral.md
+2026-09-30 15:35:33 | INFO | Stage 2/2: generating meeting notes: test_for_mistral.md
+2026-09-30 15:35:33 | ERROR | Processing failed: E:\AAA\WhisperX\2_Processing\test\test_for_mistral.md
+Traceback (most recent call last):
+  File "E:\AAA\WhisperX\Mistral\mistral.py", line 89, in load_json
+    return json.loads(path.read_text(encoding="utf-8"))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\dmacarie\AppData\Local\Python\pythoncore-3.12-64\Lib\json\__init__.py", line 335, in loads
+    raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+json.decoder.JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\AAA\WhisperX\Mistral\process.py", line 49, in process_one
+    generate_notes(evidence, participants, metadata if metadata.exists() else None,
+  File "E:\AAA\WhisperX\Mistral\mistral.py", line 437, in generate_notes
+    participants = load_mapping(participants_path, "participants")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\AAA\WhisperX\Mistral\mistral.py", line 109, in load_mapping
+    data = load_json(path)
+           ^^^^^^^^^^^^^^^
+  File "E:\AAA\WhisperX\Mistral\mistral.py", line 93, in load_json
+    raise RuntimeError(f"Ongeldige JSON in {path}: {exc}") from exc
+RuntimeError: Ongeldige JSON in E:\AAA\WhisperX\2_Processing\test\participants.json: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+2026-09-30 15:39:01 | INFO | Mistral pipeline watcher stopped.
+2026-09-30 15:40:59 | INFO | Mistral pipeline watcher started.
+2026-09-30 15:40:59 | INFO | Watch directory: E:\AAA\WhisperX\2_Processing
+2026-09-30 15:40:59 | INFO | Output directory: E:\AAA\WhisperX\3_Meeting Notes
+2026-09-30 15:40:59 | INFO | Model: mistral-meeting:16k
+2026-09-30 15:41:02 | INFO | Using existing evidence: E:\AAA\WhisperX\2_Processing\test\test_evidence.json
+2026-09-30 15:41:02 | INFO | Stage 2/2: generating meeting notes: test_for_mistral.md
+2026-09-30 15:41:38 | INFO | Completed: test_for_mistral.md

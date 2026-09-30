@@ -1,0 +1,17 @@
+{
+  "model": "mistral-meeting:16k",
+  "created_at": "2026-09-30T13:41:38.4031435Z",
+  "message": {
+    "role": "assistant",
+    "content": "{\n  \"summary\": \"De vergadering besprak de status van een project en de wijzigingen die zijn voorgesteld door de stedenbouwer Ferry Adema. Er was weerstand tegen deze wijzigingen en er werd gezocht naar oplossingen.\",\n  \"key_discussion_points\": [\n    {\n      \"topic\": \"Ingediende eisen\",\n      \"details\": \"Op 10 maart waren eisen ingediend en deze moeten aan de geldende eisen worden getoetst.\",\n      \"evidence_ids\": [\"E001\"]\n    },\n    {\n      \"topic\": \"AI-geschreven bericht\",\n      \"details\": \"Het bericht van de gemeente was AI-geschreven.\",\n      \"evidence_ids\": [\"E003\"]\n    },\n    {\n      \"topic\": \"Wijzigingen in het plan\",\n      \"details\": \"Er zijn behoorlijke wijzigingen voorgesteld ten opzichte van het liggende plan.\",\n      \"evidence_ids\": [\"E021\", \"E030\"]\n    },\n    {\n      \"topic\": \"Weerstand tegen wijzigingen\",\n      \"details\": \"Er is weerstand tegen de voorgestelde wijzigingen bij Stadion en Gert-Jan.\",\n      \"evidence_ids\": [\"E022\"]\n    },\n    {\n      \"topic\": \"Oplossingen zoeken\",\n      \"details\": \"Er werd gezocht naar oplossingen voor de problemen en het is nog niet gebouwd, dus er is ruimte voor aanpassingen.\",\n      \"evidence_ids\": [\"E027\", \"E033\"]\n    }\n  ],\n  \"decisions\": [],\n  \"statements_and_conclusions\": [\n    {\n      \"statement\": \"Het bericht van de gemeente was AI-geschreven.\",\n      \"speaker\": \"Dennis\",\n      \"timestamp\": \"00:00:08\",\n      \"evidence_ids\": [\"E003\"]\n    },\n    {\n      \"statement\": \"Er is weerstand tegen de voorgestelde wijzigingen bij Stadion en Gert-Jan.\",\n      \"speaker\": \"Richard\",\n      \"timestamp\": \"00:01:26\",\n      \"evidence_ids\": [\"E022\"]\n    },\n    {\n      \"statement\": \"Het is nog niet gebouwd, dus er is ruimte voor aanpassingen.\",\n      \"speaker\": \"Richard\",\n      \"timestamp\": \"00:02:56\",\n      \"evidence_ids\": [\"E033\"]\n    }\n  ],\n  \"proposed_actions\": [\n    {\n      \"action\": \"Gert-Jan moet het blijven controleren.\",\n      \"responsible\": \"Gert-Jan\",\n      \"deadline\": \"Niet genoemd\",\n      \"timestamp\": \"00:00:21\",\n      \"evidence_ids\": [\"E006\"]\n    },\n    {\n      \"action\": \"Reflecteren op de wijzigingen en oplossingen zoeken.\",\n      \"responsible\": \"Niet genoemd\",\n      \"deadline\": \"Niet genoemd\",\n      \"timestamp\": \"00:02:00\",\n      \"evidence_ids\": [\"E027\"]\n    }\n  ],\n  \"confirmed_action_items\": [],\n  \"important_dates\": [],\n  \"open_questions\": [\n    {\n      \"question\": \"Is dit weer een nieuwe mening?\",\n      \"evidence_ids\": [\"E023\"]\n    },\n    {\n      \"question\": \"Hoe gaan we zorgen dat dit er nu doorheen gaat lopen?\",\n      \"evidence_ids\": [\"E024\"]\n    }\n  ],\n  \"additional_notes\": [\n    \"Er was een overleg met de stedenbouwer Ferry Adema over de welstandspresentatie en de reflectie daarop.\",\n    \"De bestanden van de welstandspresentatie zijn gedeeld met de deelnemers.\"\n  ]\n}"
+  },
+  "done": true,
+  "done_reason": "stop",
+  "total_duration": 33593971900,
+  "load_duration": 9055667300,
+  "prompt_eval_count": 4189,
+  "prompt_eval_cached_count": 0,
+  "prompt_eval_duration": 3256713000,
+  "eval_count": 849,
+  "eval_duration": 21231768000
+}
