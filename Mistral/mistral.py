@@ -60,6 +60,12 @@ Maak een rijke, bruikbare vergadernotitie — GEEN kortere versie van het transc
 17. Corrigeer alleen duidelijke transcriptiefouten als de aangeleverde evidence dit ondubbelzinnig ondersteunt.
 18. Geef alleen geldig JSON terug, zonder Markdown of code fences.
 
+20. Combineer nooit feiten uit afzonderlijke evidence-items tot een nieuwe relatie, gebeurtenis, sprekerstoeschrijving of oorzaak-gevolgrelatie tenzij die relatie expliciet door de evidence wordt ondersteund.
+21. Los voornaamwoorden of verwijzingen zoals "hij", "die", "daar" en "toen" niet op basis van aannames op wanneer meerdere personen of gebeurtenissen mogelijk zijn. Beschrijf de bronuitspraken afzonderlijk of laat de onzekere relatie weg.
+22. Voeg afzonderlijke gebeurtenissen niet samen alleen omdat ze over hetzelfde onderwerp of dezelfde persoon gaan.
+23. Een persoon die in een uitspraak wordt genoemd, is niet automatisch de spreker van die uitspraak. Houd de daadwerkelijke spreker van de evidence gescheiden van de persoon over wie of namens wie wordt gesproken.
+24. Als een toeschrijving of relatie niet eenduidig uit de evidence volgt, formuleer deze neutraal en zonder de ontbrekende relatie in te vullen.
+
 Gebruik exact deze structuur:
 {
   "summary": "string",
