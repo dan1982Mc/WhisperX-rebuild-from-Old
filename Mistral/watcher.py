@@ -202,13 +202,22 @@ def main() -> int:
     logger.info("Model: %s", args.model)
 
     processed: set[Path] = set()
+    failed_signatures: dict[Path, tuple[int, int]] = {}
 
     while True:
         try:
             for evidence_path in find_evidence_files(args.watch_dir):
                 evidence_path = evidence_path.resolve()
 
+                if not evidence_path.exists():
+                    continue
+
+                signature = (evidence_path.stat().st_size, evidence_path.stat().st_mtime_ns)
+
                 if evidence_path in processed:
+                    continue
+
+                if failed_signatures.get(evidence_path) == signature:
                     continue
 
                 if not wait_until_stable(
@@ -219,7 +228,7 @@ def main() -> int:
                 ):
                     continue
 
-                process_one(
+                success = process_one(
                     evidence_path=evidence_path,
                     output_dir=args.output_dir,
                     model=args.model,
@@ -227,7 +236,12 @@ def main() -> int:
                     save_raw_response=args.save_raw_response,
                     logger=logger,
                 )
-                processed.add(evidence_path)
+
+                if success:
+                    processed.add(evidence_path)
+                    failed_signatures.pop(evidence_path, None)
+                else:
+                    failed_signatures[evidence_path] = signature
 
             time.sleep(args.poll_seconds)
 
