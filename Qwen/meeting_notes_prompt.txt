@@ -7,42 +7,76 @@ De evidence is al uit het transcript geëxtraheerd. Gebruik uitsluitend deze evi
 DEELNEMERS:
 {{PARTICIPANTS}}
 
-Belangrijk:
-- proposal is geen decision
-- opinion is geen decision
-- question is geen answer
-- suggested action is geen confirmed action
-- reported statement blijft gerapporteerd
-- verzin geen feiten, personen, deadlines of afspraken
-- behoud relevante cijfers, data, tijden en voorwaarden
-- behoud belangrijke verschillen van mening
-- laat relevante vragen niet verdwijnen
-- als evidence onzeker is, formuleer voorzichtig
-- maak geen groepsbesluit uit meerdere individuele uitspraken
+DOEL:
+Maak inhoudelijk rijke notulen die de vergadering begrijpelijk weergeven. Vat niet alles letterlijk samen en maak geen transcriptie van de evidence. Groepeer verwante informatie per onderwerp en behoud de relevante context, standpunten, bezwaren, voorstellen, conclusies en vragen.
 
-Attributie:
-Als Richard rapporteert dat Richard Koek iets zei, schrijf dan dat Richard dit rapporteerde. Schrijf niet dat Richard Koek het zelf bevestigde tenzij daarvoor aparte evidence bestaat.
+ALGEMENE REGELS:
+- Gebruik uitsluitend de evidence als inhoudelijke bron.
+- Verzin geen feiten, personen, deadlines, afspraken of besluiten.
+- Behoud relevante cijfers, namen, data, tijden en voorwaarden.
+- Een proposal is geen decision.
+- Een opinion is geen decision.
+- Een question is geen answer.
+- Een suggested action is geen confirmed action.
+- Een individuele uitspraak is geen groepsbesluit.
+- Behoud belangrijke verschillen van mening en bezwaren.
+- Als evidence uncertain is, formuleer voorzichtig.
+- Laat inhoudelijk relevante informatie niet verdwijnen alleen omdat die niet in een besluit of actie past.
+- Combineer verwante evidence-items waar dat de leesbaarheid verbetert.
+- Neem niet elk klein bevestigingswoord, begroetingsfragment of losse tussenwerping op in de uiteindelijke notulen, tenzij het inhoudelijk relevant is.
 
-Besluiten:
-Gebruik alleen evidence met type "decision" onder Besluiten. Maak zelf geen besluiten door voorstellen of meningen te combineren.
+ATTRIBUTIE:
+- Houd altijd vast wie iets zegt of rapporteert.
+- Als A rapporteert dat B iets zei, schrijf dan dat A dit rapporteerde.
+- Schrijf niet dat B iets zelf bevestigde tenzij daarvoor aparte evidence bestaat.
+- Als een uitspraak aan een specifieke persoon wordt toegeschreven, behoud die naam.
+- Maak van een uitspraak van één persoon nooit een standpunt van de hele groep.
 
-Acties:
-Gebruik "Voorgestelde acties" voor voorstellen en mogelijke vervolgstappen.
-Gebruik "Bevestigde actiepunten" alleen voor daadwerkelijk bevestigde/toegewezen acties.
-Verzin geen verantwoordelijke of deadline.
+BESLUITEN:
+- Gebruik onder "Besluiten" uitsluitend evidence met type "decision".
+- Een voorstel, mening, conclusie of sterke voorkeur is geen besluit.
+- Maak zelf geen besluit door meerdere uitspraken te combineren.
+- Als er geen expliciete decision-evidence is, schrijf: "Geen expliciete informatie genoemd."
 
-Vragen:
-Behoud relevante evidence met type "question". Onbeantwoorde vragen horen onder "Openstaande vragen".
+ACTIES:
+- Gebruik "Voorgestelde acties" voor voorstellen, mogelijke vervolgstappen en gewenste acties die niet bevestigd zijn.
+- Gebruik "Bevestigde actiepunten" alleen voor daadwerkelijk bevestigde of toegewezen acties.
+- Neem alleen een verantwoordelijke op als die expliciet uit de evidence blijkt.
+- Neem alleen een deadline op als die expliciet uit de evidence blijkt.
+- Maak geen actiepunt van een algemene wens of retorische vraag.
 
-Maak rijke notulen. Behoud waar relevant:
-- aanleiding
-- besproken onderwerp
-- standpunten
-- voorstellen
-- bezwaren
-- conclusie
-- actie
-- openstaande vraag
+VRAGEN:
+- Behoud inhoudelijk relevante evidence met type "question".
+- Onbeantwoorde vragen horen onder "Openstaande vragen".
+- Geef een vraag niet weer als beantwoord als de evidence geen duidelijk antwoord bevat.
+- Losse fragmenten zoals "Niet?", "Nee?" of "Ja?" alleen opnemen als ze zelfstandig inhoudelijk relevant zijn; anders mogen ze worden weggelaten.
+
+UITSPRAKEN EN CONCLUSIES:
+- Gebruik deze sectie voor belangrijke standpunten, constateringen en conclusies die niet als besluit of actie moeten worden gepresenteerd.
+- Vermijd een lange lijst van bijna letterlijke citaten.
+- Formuleer in helder Nederlands en behoud de betekenis.
+- Gebruik alleen een letterlijk citaat wanneer de exacte formulering relevant is.
+- Maak duidelijk wie een belangrijk standpunt innam wanneer dat relevant is.
+
+BELANGRIJKE DATA:
+- Neem hier alleen echte data, tijden, termijnen of andere concrete tijdsinformatie op.
+- Personen, organisaties en onderwerpen horen niet in deze sectie tenzij ze onderdeel zijn van een concrete datum of termijn.
+- Als een tijdsaanduiding onzeker of onduidelijk is, formuleer dat voorzichtig.
+
+BELANGRIJKE INHOUD:
+Zorg dat de notulen, wanneer aanwezig in de evidence, herkenbaar aandacht besteden aan:
+- aanleiding van de bespreking
+- wat er is besproken
+- relevante standpunten
+- voorstellen en alternatieven
+- bezwaren of weerstand
+- wat al is gecontroleerd of bevestigd
+- relevante conclusies
+- openstaande vragen
+- expliciete besluiten
+- bevestigde acties
+- voorgestelde vervolgstappen
+- relevante data, termijnen en voorwaarden
 
 Gebruik exact deze structuur:
 
@@ -70,6 +104,20 @@ Gebruik exact deze structuur:
 ## Openstaande vragen
 
 ## Aanvullende opmerkingen
+
+KWALITEITSCONTROLE VOOR OUTPUT:
+Controleer vóór je antwoord:
+1. Is iedere decision in "Besluiten" daadwerkelijk een expliciete decision?
+2. Zijn voorstellen niet veranderd in besluiten?
+3. Zijn voorgestelde acties niet veranderd in bevestigde acties?
+4. Zijn vragen behouden en niet als antwoorden gepresenteerd?
+5. Is attributie correct gebleven?
+6. Zijn relevante bezwaren en alternatieve standpunten behouden?
+7. Zijn relevante cijfers, data, tijden en voorwaarden behouden?
+8. Staan personen niet onterecht onder "Belangrijke data"?
+9. Is de tekst rijk genoeg om de inhoud van de vergadering te begrijpen zonder het transcript te lezen?
+10. Is de tekst niet onnodig lang door ieder evidence-item afzonderlijk te herhalen?
+11. Staat er niets in de notulen dat niet door de evidence wordt ondersteund?
 
 Als een sectie werkelijk geen informatie bevat:
 Geen expliciete informatie genoemd.
