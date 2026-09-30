@@ -316,7 +316,14 @@ def main() -> int:
     parser.add_argument("--max-chars-per-chunk", type=int, default=DEFAULT_MAX_CHARS_PER_CHUNK)
     args = parser.parse_args()
 
-    extract_evidence(\n        args.transcript, args.participants, args.output, args.model, args.ollama_url,\n        max_chars_per_chunk=args.max_chars_per_chunk\n    )
+    extract_evidence(
+        args.transcript,
+        args.participants,
+        args.output,
+        args.model,
+        args.ollama_url,
+        max_chars_per_chunk=args.max_chars_per_chunk,
+    )
     return 0
 
 if __name__ == "__main__":
