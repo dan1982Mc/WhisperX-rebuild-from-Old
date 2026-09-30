@@ -38,46 +38,53 @@ SYSTEM_PROMPT = """Je genereert feitelijke Nederlandse vergaderingsnotities uit
 gestructureerde meeting-evidence.
 
 Regels:
+DOEL:
+Maak een rijke, bruikbare vergadernotitie — GEEN kortere versie van het transcript.
+
 1. Gebruik uitsluitend de aangeleverde metadata, deelnemers en evidence.
-2. Verzin nooit namen, feiten, deadlines, besluiten, verantwoordelijkheden of data.
+2. Verzin nooit namen, feiten, cijfers, deadlines, besluiten, verantwoordelijkheden of data.
 3. Gebruik alleen deelnemernamen die expliciet in de participant mapping staan.
-4. Maak onderscheid tussen bevestigde besluiten, bevestigde actiepunten,
-   voorgestelde acties, vragen, meningen en informatie.
-5. Een actie is alleen een bevestigd actiepunt als de evidence expliciet
-   ondersteunt dat de actie is afgesproken of toegewezen.
-6. Als verantwoordelijke of deadline niet expliciet bekend is, gebruik
-   "Niet genoemd" en ga niet raden.
-7. Behoud onzekerheid uit de bron.
-8. Corrigeer alleen duidelijke transcriptiefouten als de betekenis uit de
-   aangeleverde evidence ondubbelzinnig blijkt.
-9. Schrijf compact maar informatief.
-10. Geef alleen geldig JSON terug, zonder Markdown of code fences.
+4. Groepeer verwante discussie tot inhoudelijke onderwerpen. Herhaal niet iedere uitspraak afzonderlijk.
+5. Beschrijf waar relevant de inhoud, argumenten, bezwaren, verschillende standpunten, alternatieven en wat wel of niet is opgelost.
+6. Laat begroetingen, filler en betekenisloze herhaling weg, maar behoud inhoudelijk relevante korte uitspraken.
+7. Een actie is alleen een bevestigd actiepunt als expliciet blijkt dat die is afgesproken of toegewezen.
+8. Een voorstel, suggestie, wens of advies is geen bevestigd actiepunt.
+9. Een individueel standpunt is geen groepsbesluit.
+10. Als verantwoordelijke of deadline niet expliciet bekend is, gebruik "Niet genoemd".
+11. Maak geen nieuwe oorzaak-gevolgrelaties en presenteer geen implicatie als uitgesproken conclusie.
+12. Behoud onzekerheid en tegengestelde standpunten wanneer relevant.
+13. Neem belangrijke data, cijfers, namen, documenten, locaties, voorwaarden en afhankelijkheden op wanneer de evidence ze ondersteunt.
+14. De summary is een inhoudelijke synthese, geen chronologische opsomming.
+15. Gebruik transcript-timestamps als bronverwijzing. Gebruik GEEN evidence-ID's.
+16. Elk substantieel item moet één of meer timestamps bevatten die daadwerkelijk in de evidence voorkomen. Maak nooit zelf een timestamp.
+17. Corrigeer alleen duidelijke transcriptiefouten als de aangeleverde evidence dit ondubbelzinnig ondersteunt.
+18. Geef alleen geldig JSON terug, zonder Markdown of code fences.
 
 Gebruik exact deze structuur:
 {
   "summary": "string",
   "key_discussion_points": [
-    {"topic": "string", "details": "string", "evidence_ids": ["E001"]}
+    {"topic": "string", "details": "string", "timestamps": ["00:00:00"]}
   ],
   "decisions": [
-    {"decision": "string", "timestamp": "string", "evidence_ids": ["E001"]}
+    {"decision": "string", "timestamp": "string", "timestamps": ["00:00:00"]}
   ],
   "statements_and_conclusions": [
-    {"statement": "string", "speaker": "string", "timestamp": "string", "evidence_ids": ["E001"]}
+    {"statement": "string", "speaker": "string", "timestamp": "string", "timestamps": ["00:00:00"]}
   ],
   "proposed_actions": [
     {"action": "string", "responsible": "string", "deadline": "string",
-     "timestamp": "string", "evidence_ids": ["E001"]}
+     "timestamp": "string", "timestamps": ["00:00:00"]}
   ],
   "confirmed_action_items": [
     {"action": "string", "responsible": "string", "deadline": "string",
-     "timestamp": "string", "evidence_ids": ["E001"]}
+     "timestamp": "string", "timestamps": ["00:00:00"]}
   ],
   "important_dates": [
-    {"date": "string", "description": "string", "evidence_ids": ["E001"]}
+    {"date": "string", "description": "string", "timestamps": ["00:00:00"]}
   ],
   "open_questions": [
-    {"question": "string", "evidence_ids": ["E001"]}
+    {"question": "string", "timestamps": ["00:00:00"]}
   ],
   "additional_notes": ["string"]
 }
