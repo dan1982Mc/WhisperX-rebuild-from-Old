@@ -197,44 +197,52 @@ while ($true) {
             $prompt = $prompt.Replace("{{PARTICIPANTS}}", $participantText)
             $prompt = $prompt.Replace("{{EVIDENCE}}", $evidenceJson)
 
-            Write-Host "Stage 2: generating meeting notes..."
-            # -------------------------------------------------
-            # Call Ollama
-            # -------------------------------------------------
-
-            $body = @{
-                model = $Model
-                prompt = $prompt
-                stream = $false
-                keep_alive = "10m"
-                options = @{
-                    num_ctx = 16384
-                }
-            } |
-            ConvertTo-Json -Depth 10
-
-            try {
-                $bodyBytes = [System.Text.Encoding]::UTF8.GetBytes($body)
-                $response = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json; charset=utf-8" -Body $bodyBytes
+            if (Test-Path $outputFile) {
+                Write-Host "Existing meeting notes found: $outputFile" -ForegroundColor DarkGray
+                $finalNotes = Get-Content $outputFile -Raw
             }
-            catch {
-                $serverError = $_.ErrorDetails.Message
-                if ([string]::IsNullOrWhiteSpace($serverError)) {
-                    $serverError = $_.Exception.Message
+            else {
+                Write-Host "Stage 2: generating meeting notes..."
+                # -------------------------------------------------
+                # Call Ollama
+                # -------------------------------------------------
+
+                $body = @{
+                    model = $Model
+                    prompt = $prompt
+                    stream = $false
+                    keep_alive = "10m"
+                    options = @{
+                        num_ctx = 16384
+                    }
+                } |
+                ConvertTo-Json -Depth 10
+
+                try {
+                    $bodyBytes = [System.Text.Encoding]::UTF8.GetBytes($body)
+                    $response = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json; charset=utf-8" -Body $bodyBytes
                 }
-                throw "Ollama Stage 2 error: $serverError"
+                catch {
+                    $serverError = $_.ErrorDetails.Message
+                    if ([string]::IsNullOrWhiteSpace($serverError)) {
+                        $serverError = $_.Exception.Message
+                    }
+                    throw "Ollama Stage 2 error: $serverError"
+                }
+
+                # -------------------------------------------------
+                # Save final Qwen response
+                # -------------------------------------------------
+
+                New-Item -ItemType Directory -Force $MeetingNotesRoot | Out-Null
+
+                $response.response |
+                    Set-Content `
+                        -Path $outputFile `
+                        -Encoding UTF8
+
+                $finalNotes = $response.response
             }
-
-            # -------------------------------------------------
-            # Save final Qwen response
-            # -------------------------------------------------
-
-            New-Item -ItemType Directory -Force $MeetingNotesRoot | Out-Null
-
-            $response.response |
-                Set-Content `
-                    -Path $outputFile `
-                    -Encoding UTF8
 
             # -------------------------------------------------
             # Save machine-readable meeting notes JSON
@@ -245,7 +253,7 @@ while ($true) {
             $currentSection = $null
             $sectionLines = New-Object System.Collections.Generic.List[string]
 
-            foreach ($line in ($response.response -split "`n")) {
+            foreach ($line in ($finalNotes -split "`n")) {
                 $trimmed = $line.TrimEnd("`r")
 
                 if ($trimmed -match "^## (.+)$") {
@@ -292,11 +300,11 @@ while ($true) {
                 $meetingDate = (Get-Date).ToString("dd-MM-yyyy")
             }
 
-            & $Python $DocxScript
-                --input $outputFile
-                --output $outputDocxFile
-                --project "WhisperX"
-                --meeting $meetingName
+            & $Python $DocxScript `
+                --input $outputFile `
+                --output $outputDocxFile `
+                --project "WhisperX" `
+                --meeting $meetingName `
                 --date $meetingDate
 
             if ($LASTEXITCODE -ne 0 -or -not (Test-Path $outputDocxFile)) {
