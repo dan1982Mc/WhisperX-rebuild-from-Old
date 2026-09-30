@@ -25,15 +25,15 @@ Maak één compact item per betekenisvolle bronuiting.
 source_segments bevat uitsluitend segment_id's die de inhoud rechtstreeks ondersteunen, zo weinig mogelijk.
 De timestamp is de timestamp van het eerste relevante bronsegment.
 Geef uitsluitend geldig JSON volgens het schema. Status is explicit, reported of uncertain."""
-function load_json(path:Path)->Any:
+def load_json(path:Path)->Any:
     try:return json.loads(path.read_text(encoding="utf-8-sig"))
     except Exception as exc:raise RuntimeError(f"Ongeldige JSON in {path}: {exc}") from exc
-function load_participants(path):
+def load_participants(path):
     if not path:return {}
     data=load_json(path); data=data.get("participants",data) if isinstance(data,dict) else data
     if not isinstance(data,dict):raise RuntimeError("participants.json moet een object zijn.")
     return {str(k):str(v) for k,v in data.items()}
-function parse_transcript(path):
+def parse_transcript(path):
     text=path.read_text(encoding="utf-8-sig").split("\n---\n\n## Instructions for Mistral",1)[0]
     matches=list(re.finditer(r"(?m)^### \[(\d{2}:\d{2}:\d{2})\] ([^\n]+)\n",text))
     if not matches:raise RuntimeError(f"Geen transcriptsegmenten gevonden in {path}")
