@@ -27,8 +27,11 @@ while ($true) {
 
         try {
 
-            # Ignore the helper file created for participant mapping.
-            if ($file.Name -eq "participants_for_qwen.md") {
+            # Ignore helper files that are not the primary meeting transcript.
+            if (
+                $file.Name -eq "participants_for_qwen.md" -or
+                $file.Name -like "*_evidence_for_qwen.md"
+            ) {
                 $processed[$file.FullName] = $true
                 continue
             }
