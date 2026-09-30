@@ -157,7 +157,8 @@ while ($true) {
                     keep_alive = "10m"
                 } | ConvertTo-Json -Depth 10
 
-                $extractionResponse = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json" -Body $body
+                $bodyBytes = [System.Text.Encoding]::UTF8.GetBytes($body)
+                $extractionResponse = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json; charset=utf-8" -Body $bodyBytes
 
                 $evidenceText = $extractionResponse.response.Trim()
                 $fence = ([char]96).ToString()
@@ -201,7 +202,8 @@ while ($true) {
             ConvertTo-Json -Depth 10
 
             try {
-                $response = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json" -Body $body
+                $bodyBytes = [System.Text.Encoding]::UTF8.GetBytes($body)
+                $response = Invoke-RestMethod -Uri $OllamaUrl -Method Post -ContentType "application/json; charset=utf-8" -Body $bodyBytes
             }
             catch {
                 $serverError = $_.ErrorDetails.Message
