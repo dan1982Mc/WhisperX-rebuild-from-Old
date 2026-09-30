@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse, json, logging, sys, time
 from pathlib import Path
 from extract_evidence import extract_evidence
-from mistral import generate_notes, safe_filename
+from mistral import generate_notes, load_evidence, load_json, safe_filename
 
 DEFAULT_WATCH_DIR = Path("2_Processing")
 DEFAULT_OUTPUT_DIR = Path("3_Meeting Notes")
@@ -29,6 +29,40 @@ def stable(path: Path, delay: float) -> bool:
     b = path.stat()
     return a.st_size == b.st_size and a.st_mtime_ns == b.st_mtime_ns
 
+def validate_notes(notes_path: Path, evidence_path: Path, participants_path: Path) -> None:
+    notes_data = load_json(notes_path)
+    notes = notes_data.get("notes") if isinstance(notes_data, dict) else notes_data
+    if not isinstance(notes, dict):
+        raise RuntimeError("Meeting notes JSON bevat geen geldig 'notes' object.")
+
+    evidence = load_evidence(evidence_path)
+    valid_timestamps = {str(item.get("timestamp")) for item in evidence if item.get("timestamp")}
+
+    participants_data = load_json(participants_path)
+    participants = participants_data.get("participants", participants_data)
+    valid_names = {str(v) for v in participants.values() if str(v).strip()} if isinstance(participants, dict) else set()
+
+    fields = (
+        "key_discussion_points", "decisions", "statements_and_conclusions",
+        "proposed_actions", "confirmed_action_items", "important_dates", "open_questions"
+    )
+    for field in fields:
+        items = notes.get(field, [])
+        if not isinstance(items, list):
+            raise RuntimeError(f"Notes veld '{field}' moet een lijst zijn.")
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            timestamps = item.get("timestamps")
+            if not isinstance(timestamps, list) or not timestamps:
+                raise RuntimeError(f"Item in '{field}' mist transcript-timestamps.")
+            unknown = [str(ts) for ts in timestamps if str(ts) not in valid_timestamps]
+            if unknown:
+                raise RuntimeError(f"Item in '{field}' bevat onbekende timestamp(s): {unknown}")
+            speaker = item.get("speaker")
+            if speaker and speaker not in participants and speaker not in valid_names:
+                raise RuntimeError(f"Onbekende spreker in '{field}': {speaker}")
+
 def process_one(transcript: Path, output_dir: Path, model: str, ollama_url: str, logger: logging.Logger) -> bool:
     participants = transcript.parent / "participants.json"
     if not participants.exists():
@@ -46,8 +80,13 @@ def process_one(transcript: Path, output_dir: Path, model: str, ollama_url: str,
             logger.info("Using existing evidence: %s", evidence)
         logger.info("Stage 2/2: generating meeting notes: %s", transcript.name)
         metadata = transcript.parent / "metadata.json"
-        generate_notes(evidence, participants, metadata if metadata.exists() else None,
-                       output_dir, model, ollama_url, save_raw_response=True)
+        json_path, _, _ = generate_notes(
+            evidence, participants, metadata if metadata.exists() else None,
+            output_dir, model, ollama_url, save_raw_response=True
+        )
+        logger.info("Validating meeting notes: %s", json_path.name)
+        validate_notes(json_path, evidence, participants)
+        logger.info("Validation passed: %s", transcript.name)
         logger.info("Completed: %s", transcript.name)
         return True
     except Exception as exc:
